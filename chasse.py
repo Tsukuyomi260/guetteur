@@ -28,6 +28,7 @@ API = "https://api.github.com"
 ICI = os.path.dirname(os.path.abspath(__file__))
 FICHIER_CONFIG = os.path.join(ICI, "config.json")
 FICHIER_ETAT = os.path.join(ICI, "etat.json")
+DOSSIER_FICHES = os.path.join(ICI, "tickets")
 
 TOKEN = os.environ.get("GH_TOKEN", "")
 NTFY_TOPIC = os.environ.get("NTFY_TOPIC", "")
@@ -238,6 +239,40 @@ def fiche(repo, ticket, infos=None):
     return "\n".join(lignes)
 
 
+def ecrire_fiche(repo, numero, raison):
+    """Enregistre tickets/<numéro>.json : de quoi analyser le ticket sans accès à l'API GitHub."""
+    chemin = os.path.join(DOSSIER_FICHES, f"{numero}.json")
+    if os.path.exists(chemin):
+        return
+    t = gh(f"/repos/{repo}/issues/{numero}")
+    commentaires = gh(f"/repos/{repo}/issues/{numero}/comments", {"per_page": 100})
+    infos = analyser_commentaires(commentaires)
+    fiche_ticket = {
+        "numero": numero,
+        "repo": repo,
+        "titre": t.get("title"),
+        "lien": t.get("html_url"),
+        "montant": montant_de(t),
+        "labels": noms_labels(t),
+        "assignes": [a["login"] for a in t.get("assignees", [])],
+        "plateformes": plateformes_lisibles(t.get("body")),
+        "corps": (t.get("body") or "")[:12000],
+        "melvin_confiance": infos["melvin_confiance"] if infos["melvin"] else "aucune",
+        "commentaires": [
+            {"auteur": (c.get("user") or {}).get("login"), "date": c.get("created_at"), "texte": (c.get("body") or "")[:8000]}
+            for c in commentaires[:40]
+        ],
+        "raison_suivi": raison,
+        "enregistre_le": iso(MAINTENANT),
+    }
+    if DRY_RUN:
+        print(f"  (essai) fiche tickets/{numero}.json non écrite")
+        return
+    os.makedirs(DOSSIER_FICHES, exist_ok=True)
+    sauver(chemin, fiche_ticket, trier=False)
+    print(f"  fiche tickets/{numero}.json enregistrée")
+
+
 # ---------------------------------------------------------------- détections
 
 def detecter_jouables(config, etat, alertes):
@@ -304,6 +339,7 @@ def detecter_a_preparer(config, etat, alertes):
         if config.get("suivi_auto", True) and t["number"] not in config["suivis"]:
             config["suivis"].append(t["number"])
             print(f"  #{t['number']} ajouté automatiquement aux suivis")
+            ecrire_fiche(repo, t["number"], f"À préparer : External posé, Melvin {confiance}")
         avis_melvin = "rien proposé" if not infos["melvin"] else "confiance " + (infos["melvin_confiance"] or "inconnue")
         alertes.append({
             "priorite": 4, "tri": (1, -(montant_de(t) or 0)), "cle": cle, "numero": t["number"],
@@ -379,6 +415,7 @@ def main():
         if int(numero) not in config["suivis"]:
             config["suivis"].append(int(numero))
             print(f"Ticket #{numero} ajouté aux suivis.")
+            ecrire_fiche(config["repo"], int(numero), "Ajouté à la main")
     for numero in re.findall(r"\d+", NE_PLUS_SUIVRE):
         if int(numero) in config["suivis"]:
             config["suivis"].remove(int(numero))
