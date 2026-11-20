@@ -1,0 +1,49 @@
+name: Guetteur Expensify 107444
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+    inputs:
+      test:
+        description: 'Envoyer une notification de test'
+        type: boolean
+        default: true
+
+jobs:
+  guetter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notification de test
+        if: github.event_name == 'workflow_dispatch' && inputs.test
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: |
+          curl -sS -H "Title: Expensify #107444" -H "Priority: 5" -H "Tags: rotating_light" \
+            -d "Test du guetteur GitHub : ça marche." "https://ntfy.sh/$NTFY_TOPIC"
+
+      - name: Vérifier le label Help Wanted
+        if: github.event_name == 'schedule' || !inputs.test
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: |
+          # Heure à laquelle Help Wanted a été posé (vide s'il ne l'est pas)
+          posed_at=$(curl -sS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/Expensify/App/issues/107444/events?per_page=100" \
+            | jq -r '[.[] | select(.event == "labeled" and .label.name == "Help Wanted")] | last | .created_at // empty')
+
+          if [ -z "$posed_at" ]; then
+            echo "Pas encore Help Wanted."
+            exit 0
+          fi
+
+          # On alerte seulement pendant les 30 minutes qui suivent, pour ne pas sonner indéfiniment
+          age=$(( $(date +%s) - $(date -d "$posed_at" +%s) ))
+          echo "Help Wanted posé à $posed_at (il y a $((age / 60)) min)."
+          if [ "$age" -le 1800 ]; then
+            curl -sS -H "Title: HELP WANTED sur #107444" -H "Priority: 5" -H "Tags: rotating_light" \
+              -H "Click: https://github.com/Expensify/App/issues/107444" \
+              -d "Help Wanted posé il y a $((age / 60)) min. Poste ta proposition maintenant !" \
+              "https://ntfy.sh/$NTFY_TOPIC"
+          fi
