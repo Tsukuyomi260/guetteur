@@ -1,0 +1,72 @@
+name: Chasseur de tickets
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+    inputs:
+      suivre:
+        description: 'Numéro(s) de ticket à suivre (ex. 107444 ou 107444,107500)'
+        required: false
+        default: ''
+      ne_plus_suivre:
+        description: 'Numéro(s) de ticket à ne plus suivre'
+        required: false
+        default: ''
+      essai:
+        description: 'Mode essai : affiche le résultat sans notifier ni enregistrer'
+        type: boolean
+        default: false
+      test_notification:
+        description: 'Envoyer seulement une notification de test sur le téléphone'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chasseur
+  cancel-in-progress: false
+
+jobs:
+  chasser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Notification de test
+        if: github.event_name == 'workflow_dispatch' && inputs.test_notification
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: |
+          curl -sS -H "Title: Chasseur de tickets" -H "Priority: 5" -H "Tags: rotating_light" \
+            -d "Test du chasseur : ça marche." "https://ntfy.sh/$NTFY_TOPIC"
+
+      - name: Chasser
+        if: github.event_name == 'schedule' || !inputs.test_notification
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.essai || false }}
+          SUIVRE: ${{ inputs.suivre }}
+          NE_PLUS_SUIVRE: ${{ inputs.ne_plus_suivre }}
+        run: python3 chasse.py
+
+      - name: Enregistrer l'état
+        if: github.event_name == 'schedule' || (!inputs.test_notification && !inputs.essai)
+        run: |
+          git config user.name "chasseur"
+          git config user.email "chasseur@users.noreply.github.com"
+          git add etat.json config.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "Rien de nouveau à enregistrer."
+            exit 0
+          fi
+          git commit -m "Chasseur : mise à jour de l'état"
+          for i in 1 2 3; do
+            git pull --rebase --quiet && git push --quiet && exit 0
+            sleep 5
+          done
+          echo "Impossible d'enregistrer l'état" && exit 1
