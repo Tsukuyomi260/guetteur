@@ -1,49 +1,72 @@
-name: Guetteur Expensify 107444
+name: Chasseur de tickets
 
 on:
   schedule:
     - cron: '*/5 * * * *'
   workflow_dispatch:
     inputs:
-      test:
-        description: 'Envoyer une notification de test'
+      suivre:
+        description: 'Numéro(s) de ticket à suivre (ex. 107444 ou 107444,107500)'
+        required: false
+        default: ''
+      ne_plus_suivre:
+        description: 'Numéro(s) de ticket à ne plus suivre'
+        required: false
+        default: ''
+      essai:
+        description: 'Mode essai : affiche le résultat sans notifier ni enregistrer'
         type: boolean
-        default: true
+        default: false
+      test_notification:
+        description: 'Envoyer seulement une notification de test sur le téléphone'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chasseur
+  cancel-in-progress: false
 
 jobs:
-  guetter:
+  chasser:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
+      - uses: actions/checkout@v4
+
       - name: Notification de test
-        if: github.event_name == 'workflow_dispatch' && inputs.test
+        if: github.event_name == 'workflow_dispatch' && inputs.test_notification
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
         run: |
-          curl -sS -H "Title: Expensify #107444" -H "Priority: 5" -H "Tags: rotating_light" \
-            -d "Test du guetteur GitHub : ça marche." "https://ntfy.sh/$NTFY_TOPIC"
+          curl -sS -H "Title: Chasseur de tickets" -H "Priority: 5" -H "Tags: rotating_light" \
+            -d "Test du chasseur : ça marche." "https://ntfy.sh/$NTFY_TOPIC"
 
-      - name: Vérifier le label Help Wanted
-        if: github.event_name == 'schedule' || !inputs.test
+      - name: Chasser
+        if: github.event_name == 'schedule' || !inputs.test_notification
         env:
           GH_TOKEN: ${{ github.token }}
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
-        run: |
-          # Heure à laquelle Help Wanted a été posé (vide s'il ne l'est pas)
-          posed_at=$(curl -sS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/Expensify/App/issues/107444/events?per_page=100" \
-            | jq -r '[.[] | select(.event == "labeled" and .label.name == "Help Wanted")] | last | .created_at // empty')
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.essai || false }}
+          SUIVRE: ${{ inputs.suivre }}
+          NE_PLUS_SUIVRE: ${{ inputs.ne_plus_suivre }}
+        run: python3 chasse.py
 
-          if [ -z "$posed_at" ]; then
-            echo "Pas encore Help Wanted."
+      - name: Enregistrer l'état
+        if: github.event_name == 'schedule' || (!inputs.test_notification && !inputs.essai)
+        run: |
+          git config user.name "chasseur"
+          git config user.email "chasseur@users.noreply.github.com"
+          git add etat.json config.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "Rien de nouveau à enregistrer."
             exit 0
           fi
-
-          # On alerte seulement pendant les 30 minutes qui suivent, pour ne pas sonner indéfiniment
-          age=$(( $(date +%s) - $(date -d "$posed_at" +%s) ))
-          echo "Help Wanted posé à $posed_at (il y a $((age / 60)) min)."
-          if [ "$age" -le 1800 ]; then
-            curl -sS -H "Title: HELP WANTED sur #107444" -H "Priority: 5" -H "Tags: rotating_light" \
-              -H "Click: https://github.com/Expensify/App/issues/107444" \
-              -d "Help Wanted posé il y a $((age / 60)) min. Poste ta proposition maintenant !" \
-              "https://ntfy.sh/$NTFY_TOPIC"
-          fi
+          git commit -m "Chasseur : mise à jour de l'état"
+          for i in 1 2 3; do
+            git pull --rebase --quiet && git push --quiet && exit 0
+            sleep 5
+          done
+          echo "Impossible d'enregistrer l'état" && exit 1
