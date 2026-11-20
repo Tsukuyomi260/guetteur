@@ -1,0 +1,28 @@
+{
+  "deja_signale": {
+    "107511:preparer": "2026-11-20T18:41:56Z",
+    "107597:preparer": "2026-11-20T18:41:56Z"
+  },
+  "suivis": {
+    "107511": {
+      "assignes": [
+        "KJ21-ENG",
+        "roryabraham"
+      ],
+      "ferme": false,
+      "help_wanted": false,
+      "propositions": 0,
+      "recommande": false
+    },
+    "107597": {
+      "assignes": [
+        "DylanDylann",
+        "garrettmknight"
+      ],
+      "ferme": false,
+      "help_wanted": false,
+      "propositions": 1,
+      "recommande": false
+    }
+  }
+}

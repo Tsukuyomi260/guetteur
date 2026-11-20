@@ -1,16 +1,16 @@
 {
   "repo": "Expensify/App",
-
   "fenetre_jouable_heures": 3,
   "fenetre_preparer_heures": 6,
   "propositions_max": 2,
   "montant_min": 0,
   "alertes_max_par_passage": 5,
-
-  "confiances_melvin_acceptees": ["aucune", "low"],
+  "confiances_melvin_acceptees": [
+    "aucune",
+    "low"
+  ],
   "suivi_auto": true,
   "retrait_auto": true,
-
   "labels_exclus": [
     "Reviewing",
     "Awaiting Payment",
@@ -23,7 +23,6 @@
     "Hold",
     "On Hold"
   ],
-
   "titres_exclus_debut": [
     "[HOLD",
     "[Hold",
@@ -37,7 +36,6 @@
     "iOS & Android",
     "HybridApp"
   ],
-
   "mots_exclus": [
     "push notification",
     "camera",
@@ -46,8 +44,9 @@
     "crash on Android",
     "native module"
   ],
-
   "exiger_plateforme_web": true,
-
-  "suivis": []
+  "suivis": [
+    107597,
+    107511
+  ]
 }

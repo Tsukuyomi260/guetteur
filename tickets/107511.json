@@ -1,0 +1,54 @@
+{
+  "numero": 107511,
+  "repo": "Expensify/App",
+  "titre": "[$175] Tag picker search re-sorts the entire tag list on every keystroke",
+  "lien": "https://github.com/Expensify/App/issues/107511",
+  "montant": 175,
+  "labels": [
+    "External",
+    "Weekly"
+  ],
+  "assignes": [
+    "roryabraham",
+    "KJ21-ENG"
+  ],
+  "plateformes": [
+    "non précisées"
+  ],
+  "corps": "### Problem\nSearching for an expense tag re-sorts the workspace’s entire tag list on every keystroke, causing noticeable lag with large lists.\n\nReported Chrome development-build measurements at 4× CPU slowdown:\n- 20,000 randomly ordered tags: 416 ms per key.\n- 50,000 randomly ordered tags: 832 ms per key.\n\n### Proposed fix\nCache sorted tags per tags object so search-only changes filter the existing list without re-sorting. Preserve ordering, selected-tag behavior, disabled-tag filtering, and GL-code search.\n\nDraft implementation and before/after videos: https://github.com/Expensify/App/pull/107505\n\n### Verification\nVerify searching and clearing search with large tag lists, unchanged ordering and selection behavior, and correct updates when workspace tags change.\n\n[Slack discussion](https://expensify.slack.com/archives/C01GTK53T8Q/p1795148719776729?thread_ts=1795148277.048579)\n\nReported by @roryabraham via DM with MelvinBot\n\n<details><summary>Issue Owner</summary>Current Issue Owner: @KJ21-ENG</details>\n<details><summary>Upwork Automation - Do Not Edit</summary>\n    <ul>\n        <li>Upwork Job URL: <a href=\"https://www.upwork.com/jobs/~022123800050638526094\">https://www.upwork.com/jobs/~022123800050638526094</a></li>\n        <li>Upwork Job ID: 2123800050638526094</li>\n        <li>Last Price Increase: 2026-11-20</li>\n    </ul>\n</details>",
+  "melvin_confiance": "aucune",
+  "commentaires": [
+    {
+      "auteur": "KJ21-ENG",
+      "date": "2026-11-20T06:43:49Z",
+      "texte": "@roryabraham Heyy, waiting for assignments. "
+    },
+    {
+      "auteur": "melvin-bot[bot]",
+      "date": "2026-11-20T07:03:54Z",
+      "texte": "@roryabraham — to hire @KJ21-ENG on Upwork, add the External label so a job is created and the offer is sent automatically."
+    },
+    {
+      "auteur": "KJ21-ENG",
+      "date": "2026-11-20T10:43:39Z",
+      "texte": "@roryabraham could we please have an external label added here, since the PR has been merged?"
+    },
+    {
+      "auteur": "expensify-chore-bot[bot]",
+      "date": "2026-11-20T15:25:58Z",
+      "texte": "Triggered auto assignment to Contributor-plus team member for initial proposal review - @parasharrajat (`External`)"
+    },
+    {
+      "auteur": "expensify-chore-bot[bot]",
+      "date": "2026-11-20T15:26:07Z",
+      "texte": "Job added to Upwork: https://www.upwork.com/jobs/~022123800050638526094"
+    },
+    {
+      "auteur": "roryabraham",
+      "date": "2026-11-20T15:26:22Z",
+      "texte": "Awaiting deploy + payment"
+    }
+  ],
+  "raison_suivi": "À préparer : External posé, Melvin aucune",
+  "enregistre_le": "2026-11-20T18:41:56Z"
+}
