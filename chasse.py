@@ -41,6 +41,7 @@ APPELS = {"n": 0}
 RE_PROPOSITION = re.compile(r"^\s*#{1,3}\s*Proposal\b", re.IGNORECASE | re.MULTILINE)
 RE_PROPOSITION_MAJ = re.compile(r"^\s*#{1,3}\s*Proposal\s*\n+\s*\[Updated\]", re.IGNORECASE)
 RE_CONFIANCE = re.compile(r"\b(high|medium|low)\s+confidence\b", re.IGNORECASE)
+RE_DOUTE = re.compile(r"not yet confirmed|unconfirmed|could not (?:be )?(?:reproduce|confirm)|unable to (?:reproduce|confirm)|cannot confirm", re.IGNORECASE)
 RE_MONTANT = re.compile(r"\[\$(\d+)\]")
 RE_WEB = re.compile(r"(Windows\s*:\s*Chrome|MacOS\s*:\s*(Chrome|Safari|Desktop)|\bDesktop\b|\bWeb\b)", re.IGNORECASE)
 
@@ -122,10 +123,12 @@ def a_label(ticket, nom):
 
 
 def section_plateformes(corps):
-    """Renvoie le texte de la section « Platforms » du ticket (cases cochées seulement si la liste en a)."""
-    m = re.search(r"Platforms?\s*:?(.*?)(\n\s*#+\s|\n\s*\*\*[A-Z]|Screenshots|Applause Internal|View all open jobs|$)",
+    """Texte de la section « Platforms » (cases cochées seulement si la liste en a), ou None si le ticket n'en a pas."""
+    m = re.search(r"(?:^|\n)\s*(?:#+\s*|\*\*)?Platforms\s*:?\**\s*\n(.*?)(\n\s*#+\s|\n\s*\*\*[A-Z]|Screenshots|Applause Internal|View all open jobs|$)",
                   corps or "", re.IGNORECASE | re.DOTALL)
-    texte = m.group(1) if m else ""
+    if not m:
+        return None
+    texte = m.group(1)
     if re.search(r"-\s*\[[ xX]\]", texte):
         texte = "\n".join(l for l in texte.splitlines() if re.search(r"-\s*\[[xX]\]", l))
     return texte
@@ -133,13 +136,16 @@ def section_plateformes(corps):
 
 def plateformes_lisibles(corps):
     texte = section_plateformes(corps)
+    if texte is None:
+        return ["non précisées"]
     lignes = [re.sub(r"^[-*\s]*(\[[xX ]\])?\s*", "", l).strip() for l in texte.splitlines()]
     lignes = [l for l in lignes if l and ":" in l and len(l) < 60 and not l.lower().startswith("select")]
     return lignes
 
 
 def est_web(corps):
-    return bool(RE_WEB.search(section_plateformes(corps)))
+    texte = section_plateformes(corps)
+    return True if texte is None else bool(RE_WEB.search(texte))
 
 
 def raison_exclusion(ticket, config):
@@ -200,6 +206,8 @@ def analyser_commentaires(commentaires, depuis=None):
                 infos["melvin"] = True
                 if confiance:
                     infos["melvin_confiance"] = confiance.group(1).lower()
+                elif RE_DOUTE.search(corps) and not infos["melvin_confiance"]:
+                    infos["melvin_confiance"] = "low"  # il n'a pas pu confirmer : même doute que « low confidence »
             continue
         if not RE_PROPOSITION.search(corps) or RE_PROPOSITION_MAJ.search(corps):
             continue
