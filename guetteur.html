@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Guetteur</title>
+<style>
+  :root { --bg:#f6f7f9; --ink:#14171c; --muted:#5b6370; --line:#dde1e7; --go:#0f7b3f; --alert:#c62828; --warn:#a15c00; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:var(--bg); color:var(--ink); }
+  main { max-width:720px; margin:28px auto; padding:0 16px 40px; }
+  h1 { font-size:20px; margin:0 0 4px; }
+  h2 { font-size:14px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); margin:0 0 8px; }
+  .muted { color:var(--muted); font-size:13px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:10px; padding:16px; margin-top:14px; }
+  .status { font-size:17px; font-weight:600; }
+  .ok { color:var(--go); } .err { color:var(--alert); } .warn { color:var(--warn); }
+  label { display:block; font-size:13px; color:var(--muted); margin:10px 0 4px; }
+  input { width:100%; padding:8px; border:1px solid var(--line); border-radius:6px; font:inherit; }
+  .row { display:flex; gap:8px; flex-wrap:wrap; }
+  button { margin-top:12px; padding:10px 14px; border:0; border-radius:6px; background:var(--ink); color:#fff; font:inherit; font-weight:600; cursor:pointer; }
+  button.secondary { background:#fff; color:var(--ink); border:1px solid var(--line); }
+  button:disabled { opacity:.6; cursor:default; }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  td { padding:6px 4px; border-top:1px solid var(--line); vertical-align:top; }
+  td:first-child { white-space:nowrap; font-variant-numeric:tabular-nums; }
+  a { color:#1f4fd1; }
+  .pill { display:inline-block; padding:1px 8px; border-radius:99px; font-size:12px; font-weight:600; background:#eef0f3; }
+  .pill.hw { background:#fde7e7; color:var(--alert); }
+  #alarm { display:none; position:fixed; inset:0; background:var(--alert); color:#fff; padding:40px 24px; text-align:center; z-index:10; overflow:auto; }
+  #alarm h2 { font-size:38px; color:#fff; text-transform:none; letter-spacing:0; margin:0 0 12px; }
+  #alarm a { color:#fff; font-size:22px; font-weight:700; display:block; margin:8px 0; }
+  #alarm button { background:#fff; color:var(--alert); }
+</style>
+</head>
+<body>
+<div id="alarm">
+  <h2>HELP WANTED EST POSÉ</h2>
+  <p>Poste ta proposition maintenant.</p>
+  <div id="alarmLinks"></div>
+  <button id="stop">Couper l'alarme</button>
+</div>
+<main>
+  <h1>Guetteur de tickets</h1>
+  <div class="muted">Laisse cet onglet ouvert, son activé, ordinateur sans mise en veille. La liste des tickets à surveiller vient de ton dépôt : le chasseur GitHub la remplit tout seul.</div>
+
+  <div class="card">
+    <div id="status" class="status">Clique sur « Démarrer ».</div>
+    <div class="muted" id="last"></div>
+  </div>
+
+  <div class="card">
+    <h2>Tickets suivis</h2>
+    <table id="suivis"><tr><td class="muted">La liste s'affiche au démarrage.</td></tr></table>
+  </div>
+
+  <div class="card">
+    <h2>Autres Help Wanted récents</h2>
+    <div class="muted">Tombés depuis l'ouverture de cette page, hors de ta liste. Simple bip, pas d'alarme : vérifie s'ils te correspondent.</div>
+    <table id="autres"><tr><td class="muted">Aucun pour l'instant.</td></tr></table>
+  </div>
+
+  <div class="card">
+    <h2>Réglages</h2>
+    <div class="row">
+      <button id="start">Démarrer</button>
+      <button id="test" class="secondary">Tester l'alarme</button>
+    </div>
+    <label for="depot">Ton dépôt du chasseur (propriétaire/nom)</label>
+    <input id="depot" value="Tsukuyomi260/guetteur">
+    <label for="ntfy">Sujet ntfy pour l'alerte sur le téléphone</label>
+    <input id="ntfy" placeholder="ex. poseifon7444">
+    <label for="token">Jeton GitHub (facultatif : vérifie toutes les 10 s au lieu de 65 s)</label>
+    <input id="token" type="password" placeholder="laisser vide : la page marche sans">
+    <div class="muted" style="margin-top:8px">Le jeton n'a besoin d'aucune permission. Il reste dans cette page et disparaît quand tu la fermes.</div>
+  </div>
+</main>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var audioCtx = null, ringing = null, timer = null, timerConfig = null;
+  var config = null, suivis = [], vusAuDepart = null, autres = {}, dejaSonne = {}, etats = {};
+
+  try {
+    $('ntfy').value = localStorage.getItem('guetteur.ntfy') || '';
+    $('depot').value = localStorage.getItem('guetteur.depot') || $('depot').value;
+  } catch (e) {}
+
+  function bip(n, freq) {
+    if (!audioCtx) return;
+    for (var i = 0; i < n; i++) {
+      var o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.type = 'square'; o.frequency.value = freq || 880; g.gain.value = 0.25;
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(audioCtx.currentTime + i * 0.35); o.stop(audioCtx.currentTime + i * 0.35 + 0.25);
+    }
+  }
+
+  function ntfy(titre, message, priorite, lien) {
+    var topic = $('ntfy').value.trim();
+    if (!topic) return;
+    var h = { 'Title': titre, 'Priority': String(priorite), 'Tags': 'rotating_light' };
+    if (lien) h['Click'] = lien;
+    fetch('https://ntfy.sh/' + encodeURIComponent(topic), { method: 'POST', body: message, headers: h }).catch(function () {});
+  }
+
+  function alarme(tickets, test) {
+    var zone = $('alarmLinks');
+    zone.replaceChildren();
+    tickets.forEach(function (t) {
+      var a = document.createElement('a');
+      a.href = t.html_url; a.target = '_blank'; a.rel = 'noopener';
+      a.textContent = '#' + t.number + ' ' + t.title;
+      zone.appendChild(a);
+    });
+    $('alarm').style.display = 'block';
+    bip(3); clearInterval(ringing); ringing = setInterval(function () { bip(3); }, 1500);
+    var flip = false, tt = setInterval(function () {
+      document.title = (flip = !flip) ? '🚨 HELP WANTED 🚨' : 'Guetteur';
+      if ($('alarm').style.display === 'none') { clearInterval(tt); document.title = 'Guetteur'; }
+    }, 700);
+    tickets.forEach(function (t) {
+      ntfy(test ? 'Test du guetteur' : 'HELP WANTED #' + t.number,
+           test ? "Test : l'alarme du guetteur marche." : t.title + '\nPoste ta proposition maintenant.', 5, t.html_url);
+    });
+  }
+
+  function entetes() {
+    var h = { 'Accept': 'application/vnd.github+json' };
+    var tok = $('token').value.trim();
+    if (tok) h['Authorization'] = 'Bearer ' + tok;
+    return h;
+  }
+
+  function chargerConfig() {
+    var depot = $('depot').value.trim();
+    return fetch('https://raw.githubusercontent.com/' + depot + '/main/config.json?t=' + Date.now(), { cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw new Error('config.json introuvable dans ' + depot); return r.json(); })
+      .then(function (c) { config = c; suivis = (c.suivis || []).map(Number); afficherSuivis(); });
+  }
+
+  function cellule(tr, contenu) {
+    var td = document.createElement('td');
+    if (typeof contenu === 'string') td.textContent = contenu; else td.appendChild(contenu);
+    tr.appendChild(td); return td;
+  }
+
+  function lienTicket(n, titre) {
+    var a = document.createElement('a');
+    a.href = 'https://github.com/' + config.repo + '/issues/' + n; a.target = '_blank'; a.rel = 'noopener';
+    a.textContent = titre || ('#' + n);
+    return a;
+  }
+
+  function afficherSuivis() {
+    var table = $('suivis'); table.replaceChildren();
+    if (!suivis.length) {
+      var tr = document.createElement('tr');
+      cellule(tr, 'Aucun ticket suivi pour l’instant. Le chasseur en ajoutera dès qu’un ticket prometteur apparaît.').className = 'muted';
+      table.appendChild(tr); return;
+    }
+    suivis.forEach(function (n) {
+      var tr = document.createElement('tr');
+      cellule(tr, '#' + n);
+      cellule(tr, lienTicket(n, etats[n] ? etats[n].title : null));
+      var pill = document.createElement('span');
+      pill.className = 'pill' + (etats[n] && etats[n].hw ? ' hw' : '');
+      pill.textContent = etats[n] ? (etats[n].hw ? 'HELP WANTED' : 'en attente') : '…';
+      cellule(tr, pill);
+      table.appendChild(tr);
+    });
+  }
+
+  function afficherAutres() {
+    var table = $('autres'), cles = Object.keys(autres);
+    if (!cles.length) return;
+    table.replaceChildren();
+    cles.forEach(function (n) {
+      var tr = document.createElement('tr');
+      cellule(tr, autres[n].heure);
+      cellule(tr, lienTicket(n, '#' + n + ' ' + autres[n].title));
+      table.appendChild(tr);
+    });
+  }
+
+  function intervalle() { return $('token').value.trim() ? 10 : 65; }
+
+  function verifier() {
+    var url = 'https://api.github.com/repos/' + config.repo + '/issues?labels=' + encodeURIComponent('Help Wanted') +
+              '&state=open&sort=updated&direction=desc&per_page=50&t=' + Date.now();
+    fetch(url, { headers: entetes(), cache: 'no-store' }).then(function (r) {
+      if (r.status === 403 || r.status === 429) throw new Error('GitHub limite les vérifications : ajoute un jeton ou patiente quelques minutes.');
+      if (!r.ok) throw new Error('GitHub a répondu ' + r.status);
+      return r.json();
+    }).then(function (liste) {
+      liste = liste.filter(function (t) { return !t.pull_request; });
+      var hw = {}; liste.forEach(function (t) { hw[t.number] = t; });
+      var aSonner = [];
+      suivis.forEach(function (n) {
+        etats[n] = etats[n] || {};
+        if (hw[n]) { etats[n].title = hw[n].title; etats[n].hw = true; if (!dejaSonne[n]) { dejaSonne[n] = true; aSonner.push(hw[n]); } }
+        else { etats[n].hw = false; }
+      });
+      if (vusAuDepart === null) {
+        vusAuDepart = {}; liste.forEach(function (t) { vusAuDepart[t.number] = true; });
+      } else {
+        var nouveau = false;
+        liste.forEach(function (t) {
+          if (!vusAuDepart[t.number] && !autres[t.number] && suivis.indexOf(t.number) < 0) {
+            autres[t.number] = { title: t.title, heure: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) };
+            nouveau = true;
+            ntfy('Nouveau Help Wanted #' + t.number, t.title + '\n(hors de ta liste : vérifie s’il te correspond)', 3, t.html_url);
+          }
+        });
+        if (nouveau) { bip(1, 660); afficherAutres(); }
+      }
+      afficherSuivis();
+      if (aSonner.length) alarme(aSonner, false);
+      $('status').className = 'status ok';
+      $('status').textContent = suivis.length ? 'Surveillance de ' + suivis.length + ' ticket(s) suivi(s)' : 'En marche, aucun ticket suivi pour l’instant';
+      $('last').textContent = 'Dernière vérification : ' + new Date().toLocaleTimeString('fr-FR') + ' · toutes les ' + intervalle() + ' s';
+    }).catch(function (e) {
+      $('status').className = 'status err'; $('status').textContent = e.message;
+    }).then(function () {
+      clearTimeout(timer); timer = setTimeout(verifier, intervalle() * 1000);
+    });
+  }
+
+  function activerSon() {
+    try { audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)(); audioCtx.resume(); } catch (e) {}
+  }
+
+  $('start').addEventListener('click', function () {
+    activerSon();
+    try { localStorage.setItem('guetteur.ntfy', $('ntfy').value.trim()); localStorage.setItem('guetteur.depot', $('depot').value.trim()); } catch (e) {}
+    $('start').disabled = true; $('start').textContent = 'En marche';
+    $('status').className = 'status'; $('status').textContent = 'Chargement de ta liste…';
+    chargerConfig().then(function () {
+      verifier();
+      timerConfig = setInterval(function () { chargerConfig().catch(function () {}); }, 120000);
+    }).catch(function (e) {
+      $('status').className = 'status err'; $('status').textContent = e.message;
+      $('start').disabled = false; $('start').textContent = 'Démarrer';
+    });
+  });
+  $('test').addEventListener('click', function () {
+    activerSon();
+    try { localStorage.setItem('guetteur.ntfy', $('ntfy').value.trim()); } catch (e) {}
+    alarme([{ number: 0, title: 'Test', html_url: 'https://github.com/' }], true);
+  });
+  $('stop').addEventListener('click', function () { clearInterval(ringing); $('alarm').style.display = 'none'; });
+})();
+</script>
+</body>
+</html>

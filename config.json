@@ -1,0 +1,53 @@
+{
+  "repo": "Expensify/App",
+
+  "fenetre_jouable_heures": 3,
+  "fenetre_preparer_heures": 6,
+  "propositions_max": 2,
+  "montant_min": 0,
+  "alertes_max_par_passage": 5,
+
+  "confiances_melvin_acceptees": ["aucune", "low"],
+  "suivi_auto": true,
+  "retrait_auto": true,
+
+  "labels_exclus": [
+    "Reviewing",
+    "Awaiting Payment",
+    "DeployBlocker",
+    "DeployBlockerCash",
+    "Internal",
+    "Not a priority",
+    "Workflow Failure",
+    "Needs Reproduction",
+    "Hold",
+    "On Hold"
+  ],
+
+  "titres_exclus_debut": [
+    "[HOLD",
+    "[Hold",
+    "[Exploratory]",
+    "[Due for payment",
+    "[Payment due",
+    "[Paid]",
+    "Android -",
+    "iOS -",
+    "Android & iOS",
+    "iOS & Android",
+    "HybridApp"
+  ],
+
+  "mots_exclus": [
+    "push notification",
+    "camera",
+    "caméra",
+    "crash on iOS",
+    "crash on Android",
+    "native module"
+  ],
+
+  "exiger_plateforme_web": true,
+
+  "suivis": []
+}
