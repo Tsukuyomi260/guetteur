@@ -1,0 +1,35 @@
+{
+  "numero": 107644,
+  "repo": "Expensify/App",
+  "titre": "[$175] [Sentry: APP-MDA] Android HybridApp log sync crashes with NullPointerException in LinkedList.unlink",
+  "lien": "https://github.com/Expensify/App/issues/107644",
+  "montant": 175,
+  "labels": [
+    "External",
+    "Daily",
+    "Bug"
+  ],
+  "assignes": [
+    "Julesssss",
+    "thesahindia"
+  ],
+  "plateformes": [
+    "non précisées"
+  ],
+  "corps": "## Sentry\n\nhttps://expensify.sentry.io/issues/APP-MDA\n\nAPP-MDA groups several different Java exceptions under a shared native abort frame. This issue tracks only the log-sync NullPointerException below.\n\n## Impact (snapshot at filing)\n\n- Source: [APP-MDA crash classification](https://github.com/Expensify/App/issues/102742#issuecomment-7004558657), reviewing 611 events from 2026-08-26 through 2026-11-18. Counts below are from that review, not a fresh Sentry query.\n- Users (total since first seen): not available for this branch\n- Events: 32 (5.2% of the reviewed APP-MDA events)\n- Events on 9.5.34-1 or later: 7\n- Users (last 14d): not available for this branch\n- First seen / last seen: not available separately for this branch; reported still happening in the review\n- Platform: Android HybridApp\n- App version(s): includes 9.5.34-1 or later; complete affected-version list not available\n- Affected flow: completion of a log-packet upload; no specific user route identified\n- Mechanism: SIGABRT, fatal\n\n## Stack trace (top frames, first-party only)\n\nThe source review identifies this underlying exception and Java collection frame; a complete representative event stack has not been attached:\n\n```text\nNullPointerException\njava.util.LinkedList.unlink\n```\n\n## Suspected cause\n\nThe exception occurs during list removal when log-packet sending completes. Concurrent modification or invalid list state are hypotheses from the source discussion, not confirmed root causes. Attach representative events and establish the callback/list lifecycle before selecting a fix.\n\nThis appears to be a backend/internal issue. A separate internal investigation is needed.\n\n## Reproduction\n\nUnknown. Investigate log-upload completion, including overlapping callbacks and retry/teardown timing. These are investigation directions, not verified reproduction steps.\n\nExpected: log sync completes or handles an upload failure without crashing the app.\n\n## Related\n\n- Parent tracker: [Top Sentry crashes monthly check-in](https://github.com/Expensify/App/issues/91302)\n- Source: [APP-MDA crash classification](https://github.com/Expensify/App/issues/102742#issuecomment-7004558657)\n- Separate original issue: [FragmentManager race in legacy OldDot navigation](https://github.com/Expensify/App/issues/102742). Its reported fix does not cover this exception.\n- Sibling Sentry IDs: none identified; this is a distinct exception within APP-MDA, not a new Sentry ID.\n\n<details><summary>Upwork Automation - Do Not Edit</summary>\n    <ul>\n        <li>Upwork Job URL: <a href=\"https://www.upwork.com/jobs/~022123978535109358575\">https://www.upwork.com/jobs/~022123978535109358575</a></li>\n        <li>Upwork Job ID: 2123978535109358575</li>\n        <li>Last Price Increase: 2026-11-21</li>\n    </ul>\n</details>\n\n<details><summary>Issue Owner</summary>Current Issue Owner: @thesahindia</details>",
+  "melvin_confiance": "aucune",
+  "commentaires": [
+    {
+      "auteur": "expensify-chore-bot[bot]",
+      "date": "2026-11-21T03:15:15Z",
+      "texte": "Triggered auto assignment to Contributor-plus team member for initial proposal review - @thesahindia (`External`)"
+    },
+    {
+      "auteur": "expensify-chore-bot[bot]",
+      "date": "2026-11-21T03:15:21Z",
+      "texte": "Job added to Upwork: https://www.upwork.com/jobs/~022123978535109358575"
+    }
+  ],
+  "raison_suivi": "À préparer : External posé, Melvin aucune",
+  "enregistre_le": "2026-11-21T07:25:10Z"
+}

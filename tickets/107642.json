@@ -1,0 +1,35 @@
+{
+  "numero": 107642,
+  "repo": "Expensify/App",
+  "titre": "[$175] [Sentry: APP-MDA] Android HybridApp crashes adding receipts email contact when default contacts account is cloud",
+  "lien": "https://github.com/Expensify/App/issues/107642",
+  "montant": 175,
+  "labels": [
+    "External",
+    "Daily",
+    "Bug"
+  ],
+  "assignes": [
+    "Julesssss",
+    "jayeshmangwani"
+  ],
+  "plateformes": [
+    "non précisées"
+  ],
+  "corps": "## Sentry\n\nhttps://expensify.sentry.io/issues/APP-MDA\n\nAPP-MDA groups several different Java exceptions under a shared native abort frame. This issue tracks only the contacts exception below.\n\n## Impact (snapshot at filing)\n\n- Source: [APP-MDA crash classification](https://github.com/Expensify/App/issues/102742#issuecomment-7004558657), reviewing 611 events from 2026-08-26 through 2026-11-18. Counts below are from that review, not a fresh Sentry query.\n- Users (total since first seen): not available for this branch\n- Events: 312 (51.1% of the reviewed APP-MDA events)\n- Events on 9.5.34-1 or later: 24\n- Users (last 14d): not available for this branch\n- First seen / last seen: not available separately for this branch; reported still happening in the review\n- Platform: Android HybridApp\n- App version(s): includes 9.5.34-1 or later; complete affected-version list not available\n- Affected flow: adding the receipts email address to contacts\n- OS condition: reported on Android 16+ when the default contacts account is cloud; verify against representative events\n- Mechanism: SIGABRT, fatal\n\n## Stack trace (top frames, first-party only)\n\nThe source review identifies this underlying exception; a complete representative event stack has not been attached:\n\n```text\nIllegalArgumentException: Cannot add contacts to local or SIM accounts when default account is set to cloud\n```\n\n## Suspected cause\n\nThe contacts operation is rejected when the default account is cloud, and the exception results in an app crash. The precise cause and supported account-handling behavior still require investigation.\n\nThis appears to be a backend/internal issue. A separate internal investigation is needed.\n\n## Reproduction\n\nNot confirmed. Investigate adding the receipts email address to contacts on Android 16+ with a cloud default contacts account. Attach a representative Sentry event and confirm the affected OS/account combinations before treating these as verified reproduction steps.\n\nExpected: the app does not crash when adding the contact, including when the contacts account configuration prevents the operation.\n\n## Related\n\n- Parent tracker: [Top Sentry crashes monthly check-in](https://github.com/Expensify/App/issues/91302)\n- Source: [APP-MDA crash classification](https://github.com/Expensify/App/issues/102742#issuecomment-7004558657)\n- Separate original issue: [FragmentManager race in legacy OldDot navigation](https://github.com/Expensify/App/issues/102742). Its reported fix does not cover this exception.\n- Sibling Sentry IDs: none identified; this is a distinct exception within APP-MDA, not a new Sentry ID.\n\n<details><summary>Upwork Automation - Do Not Edit</summary>\n    <ul>\n        <li>Upwork Job URL: <a href=\"https://www.upwork.com/jobs/~022123978500679918022\">https://www.upwork.com/jobs/~022123978500679918022</a></li>\n        <li>Upwork Job ID: 2123978500679918022</li>\n        <li>Last Price Increase: 2026-11-21</li>\n    </ul>\n</details>\n\n<details><summary>Issue Owner</summary>Current Issue Owner: @jayeshmangwani</details>",
+  "melvin_confiance": "aucune",
+  "commentaires": [
+    {
+      "auteur": "expensify-chore-bot[bot]",
+      "date": "2026-11-21T03:15:06Z",
+      "texte": "Triggered auto assignment to Contributor-plus team member for initial proposal review - @jayeshmangwani (`External`)"
+    },
+    {
+      "auteur": "expensify-chore-bot[bot]",
+      "date": "2026-11-21T03:15:13Z",
+      "texte": "Job added to Upwork: https://www.upwork.com/jobs/~022123978500679918022"
+    }
+  ],
+  "raison_suivi": "À préparer : External posé, Melvin aucune",
+  "enregistre_le": "2026-11-21T07:25:10Z"
+}

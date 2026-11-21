@@ -1,0 +1,45 @@
+{
+  "numero": 107643,
+  "repo": "Expensify/App",
+  "titre": "[$175] [Sentry: APP-MDA] Android HybridApp crashes opening NewDot after activity state is saved",
+  "lien": "https://github.com/Expensify/App/issues/107643",
+  "montant": 175,
+  "labels": [
+    "External",
+    "Daily",
+    "Bug"
+  ],
+  "assignes": [
+    "Julesssss",
+    "mukhrr"
+  ],
+  "plateformes": [
+    "non précisées"
+  ],
+  "corps": "## Sentry\n\nhttps://expensify.sentry.io/issues/APP-MDA\n\nAPP-MDA groups several different Java exceptions under a shared native abort frame. This issue tracks only the saved-activity-state exception below.\n\n## Impact (snapshot at filing)\n\n- Source: [APP-MDA crash classification](https://github.com/Expensify/App/issues/102742#issuecomment-7004558657), reviewing 611 events from 2026-08-26 through 2026-11-18. Counts below are from that review, not a fresh Sentry query.\n- Users (total since first seen): not available for this branch\n- Events: 110 (18.0% of the reviewed APP-MDA events)\n- Events on 9.5.34-1 or later: 10\n- Users (last 14d): not available for this branch\n- First seen / last seen: not available separately for this branch; reported still happening in the review\n- Platform: Android HybridApp\n- App version(s): includes 9.5.34-1 or later; complete affected-version list not available\n- Affected flow: opening NewDot / closing its fragment after activity state has been saved; exact user sequence unconfirmed\n- Mechanism: SIGABRT, fatal\n\n## Stack trace (top frames, first-party only)\n\nThe source review identifies this underlying exception; a complete representative event stack has not been attached:\n\n```text\nIllegalStateException: Can not perform this action after onSaveInstanceState\n```\n\n## Suspected cause\n\nA fragment operation is attempted after Android has saved activity state. The triggering lifecycle sequence and whether all events share one cause still require investigation. This is distinct from the already-executing-transactions exception tracked by the original issue.\n\nThis appears to be a backend/internal issue. A separate internal investigation is needed.\n\n## Reproduction\n\nUnknown. Attach representative Sentry events and investigate the app-handoff flow around backgrounding, saved state, and returning to the app. These are investigation directions, not verified reproduction steps.\n\nExpected: opening NewDot and related fragment transitions do not crash when activity state has already been saved.\n\n## Related\n\n- Parent tracker: [Top Sentry crashes monthly check-in](https://github.com/Expensify/App/issues/91302)\n- Source: [APP-MDA crash classification](https://github.com/Expensify/App/issues/102742#issuecomment-7004558657)\n- Separate original issue: [FragmentManager race in legacy OldDot navigation](https://github.com/Expensify/App/issues/102742). Its reported fix does not cover this exception.\n- Sibling Sentry IDs: none identified; this is a distinct exception within APP-MDA, not a new Sentry ID.\n\n<details><summary>Upwork Automation - Do Not Edit</summary>\n    <ul>\n        <li>Upwork Job URL: <a href=\"https://www.upwork.com/jobs/~022123978520472345246\">https://www.upwork.com/jobs/~022123978520472345246</a></li>\n        <li>Upwork Job ID: 2123978520472345246</li>\n        <li>Last Price Increase: 2026-11-21</li>\n    </ul>\n</details>\n\n<details><summary>Issue Owner</summary>Current Issue Owner: @mukhrr</details>",
+  "melvin_confiance": "low",
+  "commentaires": [
+    {
+      "auteur": "expensify-chore-bot[bot]",
+      "date": "2026-11-21T03:15:10Z",
+      "texte": "Triggered auto assignment to Contributor-plus team member for initial proposal review - @mukhrr (`External`)"
+    },
+    {
+      "auteur": "expensify-chore-bot[bot]",
+      "date": "2026-11-21T03:15:17Z",
+      "texte": "Job added to Upwork: https://www.upwork.com/jobs/~022123978520472345246"
+    },
+    {
+      "auteur": "mukhrr",
+      "date": "2026-11-21T05:01:59Z",
+      "texte": "@MelvinBot leave a proposal"
+    },
+    {
+      "auteur": "MelvinBot",
+      "date": "2026-11-21T05:04:56Z",
+      "texte": "## Proposal\n\n### What is the root cause of that problem?\n\nThe reported exception indicates a native fragment operation attempted after Android saved the activity state. **The exact transaction and triggering lifecycle sequence are not yet confirmed.**\n\nThe [crash classification](https://github.com/Expensify/App/issues/102742#issuecomment-7004558657) identifies opening and closing paths in the HybridApp native host. This is separate from the previously fixed “already executing transactions” crash.\n\n<details>\n<summary>Code evidence and limitations</summary>\n\n- [HYBRID_APP.md:7–10](https://github.com/Expensify/App/blob/e41949db5a6815138b00e3c3a2e5f753eded5f83/contributingGuides/HYBRID_APP.md#L7-L10) establishes that HybridApp native code lives in Mobile-Expensify; changes to App’s standalone native directories do not affect that build.\n- App’s [Android bridge:12–22](https://github.com/Expensify/App/blob/e41949db5a6815138b00e3c3a2e5f753eded5f83/modules/hybrid-app/android/src/main/java/com/expensify/reactnativehybridapp/ReactNativeHybridApp.kt#L12-L22) is a standalone stub and performs no fragment transaction.\n- Mobile-Expensify source was unavailable locally, and GitHub access returned HTTP 404. No complete representative event stack is attached.\n\n</details>\n\n### What changes do you think we should make in order to solve the problem?\n\n**Escalate to an internal engineer with Mobile-Expensify access.** There is not enough evidence to recommend an App code change.\n\nBefore selecting a fix, attach representative Sentry stacks and lifecycle breadcrumbs for both opening NewDot and closing its fragment, preferably from affected recent releases. These must identify the actual failing transactions and establish whether the paths share one cause.\n\n### What alternative solutions did you explore? (Optional)\n\nApp-side delays or duplicate-call guards are not justified by the available evidence. They do not establish that the native activity is safe for fragment operations. Likewise, reusing the earlier reentrancy fix would address a different exception.\n\n\n---\n_[view run](https://github.com/Expensify/melvin/actions/runs/44868929044)_\n"
+    }
+  ],
+  "raison_suivi": "À préparer : External posé, Melvin low",
+  "enregistre_le": "2026-11-21T07:25:10Z"
+}

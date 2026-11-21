@@ -2,7 +2,10 @@
   "deja_signale": {
     "107511:preparer": "2026-11-20T18:41:56Z",
     "107597:preparer": "2026-11-20T18:41:56Z",
-    "107620:preparer": "2026-11-21T00:17:35Z"
+    "107620:preparer": "2026-11-21T00:17:35Z",
+    "107642:preparer": "2026-11-21T07:25:10Z",
+    "107643:preparer": "2026-11-21T07:25:10Z",
+    "107644:preparer": "2026-11-21T07:25:10Z"
   },
   "suivis": {
     "107511": {
@@ -23,6 +26,36 @@
       "ferme": false,
       "help_wanted": false,
       "propositions": 1,
+      "recommande": false
+    },
+    "107642": {
+      "assignes": [
+        "Julesssss",
+        "jayeshmangwani"
+      ],
+      "ferme": false,
+      "help_wanted": false,
+      "propositions": 0,
+      "recommande": false
+    },
+    "107643": {
+      "assignes": [
+        "Julesssss",
+        "mukhrr"
+      ],
+      "ferme": false,
+      "help_wanted": false,
+      "propositions": 0,
+      "recommande": false
+    },
+    "107644": {
+      "assignes": [
+        "Julesssss",
+        "thesahindia"
+      ],
+      "ferme": false,
+      "help_wanted": false,
+      "propositions": 0,
       "recommande": false
     }
   }
