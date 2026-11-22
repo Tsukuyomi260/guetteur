@@ -8,7 +8,9 @@
     "107644:preparer": "2026-11-21T07:25:10Z",
     "107674:preparer": "2026-11-21T21:03:09Z",
     "107675:preparer": "2026-11-22T01:10:00Z",
-    "107676:preparer": "2026-11-22T01:10:00Z"
+    "107676:preparer": "2026-11-22T01:10:00Z",
+    "107678:preparer": "2026-11-22T07:58:41Z",
+    "107683:preparer": "2026-11-22T07:58:41Z"
   },
   "suivis": {
     "107511": {
@@ -39,16 +41,6 @@
       "ferme": false,
       "help_wanted": false,
       "propositions": 0,
-      "recommande": false
-    },
-    "107643": {
-      "assignes": [
-        "Julesssss",
-        "mukhrr"
-      ],
-      "ferme": false,
-      "help_wanted": false,
-      "propositions": 4,
       "recommande": false
     },
     "107644": {
