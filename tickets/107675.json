@@ -1,0 +1,58 @@
+{
+  "numero": 107675,
+  "repo": "Expensify/App",
+  "titre": "[$175] Missing 'More' button after create an Invoice and tap 'View' button",
+  "lien": "https://github.com/Expensify/App/issues/107675",
+  "montant": 175,
+  "labels": [
+    "External",
+    "Daily",
+    "Bug"
+  ],
+  "assignes": [
+    "cretadn22"
+  ],
+  "plateformes": [
+    "Android: App",
+    "Android: mWeb Chrome",
+    "iOS: App",
+    "iOS: mWeb Safari",
+    "Windows: Chrome"
+  ],
+  "corps": "If you haven’t already, check out our [contributing guidelines](https://github.com/Expensify/ReactNativeChat/blob/main/contributingGuides/CONTRIBUTING.md) for onboarding. To join our Slack channel, fill out [this form](https://forms.gle/Q7hnhUJPnQCK7Fe56).\n___\n\n**Version Number:** 9.5.51-1-staging\n**Reproducible in staging?:** Yes\n**Reproducible in production?:** Yes\n**If this was caught during regression testing, add the test name, ID and link from BrowserStack:** https://test-management.browserstack.com/tc/TC-762083\n**Email or phone of affected tester (no customers):** winnaire@gmail.com\n**Issue reported by:** Applause Internal Team\n**Bug source:** Exploratory - Significant User Experience Deterioration\n**Device used:** iPhone 11 iOS 18.7.1 Safari / Pixel 7 pro Android 16 Chrome\n**App Component:** Left Hand Navigation (LHN)\n\n## Action Performed:\n1. Open https://staging.new.expensify.com/ \n2. Confirm your Workspace has 'Invoices' enabled\n3.Navigate to 'Spend' tab and tap on FAB '+'\n4. Tap 'Send invoice'\n5. Insert any amount and tap on 'Next'\n6. Select a Destination and tap on 'Next'\n7. Confirm 'Send the invoice'\n8. Tap on displayed bar 'View' at top\n\n## Expected Result:\nThe 'More' button should be available above Invoice header\n\n## Actual Result:\nThe 'More' button does not render when navigated to a just created Invoice from 'View'\n\n## Workaround:\nUnknown\n\n## Platforms:\n- [x] Android: App\n- [x] Android: mWeb Chrome\n- [x] iOS: App\n- [x] iOS: mWeb Safari\n- [ ] iOS: mWeb Chrome\n- [x] Windows: Chrome\n- [ ] MacOS: Chrome Safari\n\n## Screenshots/Videos\n\nhttps://github.com/user-attachments/assets/f1b75d7a-a4b7-4503-b255-79d008b10e8b\n\n[View all open jobs on GitHub](https://github.com/Expensify/App/issues?q=is%3Aopen+is%3Aissue+label%3A%22Help+Wanted%22)\n\n\n> **Applause Internal Information**\n> Exported by: Alberto Gutierrez\n> Bug ID: 7320318\n<details><summary>Upwork Automation - Do Not Edit</summary>\n    <ul>\n        <li>Upwork Job URL: <a href=\"https://www.upwork.com/jobs/~022124249823569603350\">https://www.upwork.com/jobs/~022124249823569603350</a></li>\n        <li>Upwork Job ID: 2124249823569603350</li>\n        <li>Last Price Increase: 2026-11-21</li>\n    </ul>\n</details>",
+  "melvin_confiance": "low",
+  "commentaires": [
+    {
+      "auteur": "applause-bot[bot]",
+      "date": "2026-11-21T21:05:58Z",
+      "texte": "While Applause doesn't embed attachments for this bug, here are the links for quick view:\nhttps://platform.applause.com/services/links/v1/external/d86d8ebfb52d696a1185e55e3cb532266c79b97526130adc47f5d2d2bbcf2b02"
+    },
+    {
+      "auteur": "expensify-chore-bot[bot]",
+      "date": "2026-11-21T21:13:15Z",
+      "texte": "Triggered auto assignment to Contributor-plus team member for initial proposal review - @cretadn22 (`External`)"
+    },
+    {
+      "auteur": "expensify-chore-bot[bot]",
+      "date": "2026-11-21T21:13:21Z",
+      "texte": "Job added to Upwork: https://www.upwork.com/jobs/~022124249823569603350"
+    },
+    {
+      "auteur": "MelvinBot",
+      "date": "2026-11-21T21:13:21Z",
+      "texte": "🤖 Web test steps verification results: ⚠️ partial\n\nVerified dev NewDot web through entering $1 and advancing to destination selection. Blocked by an empty recipient picker and no supplied destination fixture; this issue was not reproduced or disproved.\n\n<img src=\"https://melvinbot-assets.exops.io/107675-empty-destination-059a3ce2-6760-4b96-806a-84bbdd232e1a.png\" alt=\"Invoice destination picker without selectable recipients\" height=\"360\">\n\n| Step | Status |\n|------|--------|\n| <details><summary>Open app</summary>Signed in successfully; onboarding was complete.</details> | ✅ |\n| <details><summary>Confirm workspace has Invoices enabled</summary>Created a test workspace and enabled Invoices.</details> | ✅ |\n| <details><summary>Spend → + → Send invoice → amount → Next</summary>Entered $1 and reached destination selection.</details> | ✅ |\n| <details><summary>Select destination and send invoice</summary>Blocked: no selectable recipients or Next button appeared. This is a testing blocker, not confirmation of the reported bug.<br><img src=\"https://melvinbot-assets.exops.io/107675-empty-destination-059a3ce2-6760-4b96-806a-84bbdd232e1a.png\" alt=\"Invoice destination picker without selectable recipients\" height=\"360\"></details> | ❌ |\n| <details><summary>Click View; inspect More and navigation</summary>Not reached.<br><br><strong>Preliminary analysis — low confidence:</strong> View initially opens the invoice’s child transaction thread through [navigateToCreatedExpense.ts:68–79](https://github.com/Expensify/App/blob/e41949db5a6815138b00e3c3a2e5f753eded5f83/src/libs/Navigation/helpers/navigateToCreatedExpense.ts#L68-L79). That thread uses the generic header rather than the invoice’s action header, explaining how an invoice-looking screen can lack More: [ReportHeader.tsx:75–117](https://github.com/Expensify/App/blob/e41949db5a6815138b00e3c3a2e5f753eded5f83/src/pages/inbox/ReportHeader.tsx#L75-L117).<br><br><strong>Counterevidence:</strong> An existing [single-transaction redirect](https://github.com/Expensify/App/blob/e41949db5a6815138b00e3c3a2e5f753eded5f83/src/pages/inbox/OneTransactionThreadRedirectHandler.tsx#L49-L104) should replace that thread with the parent invoice report. Therefore, opening the thread alone does not establish the root cause. Ordinary invoice permissions are also unlikely: the loaded report always receives [View details](https://github.com/Expensify/App/blob/e41949db5a6815138b00e3c3a2e5f753eded5f83/src/libs/ReportSecondaryActionUtils.ts#L1249-L1255) as a secondary action.<br><br><strong>Required confirmation:</strong> Capture the final report ID after View and determine whether the redirect completes. If the child thread persists, investigate its parent/action linkage and redirect conditions. No code fix is verified yet; changing permissions or redirect behavior would be premature.</details> | ❌ |\n\n\n---\n_[view run](https://github.com/Expensify/melvin/actions/runs/44949748936)_ · _[view recording](https://melvinbot-assets.exops.io/session-44949748936-1-c98fc6dc-c41e-4cc0-841c-b752b34e3879.webm)_\n"
+    },
+    {
+      "auteur": "yusufdeveloper2903",
+      "date": "2026-11-21T21:43:44Z",
+      "texte": "@cretadn22 Melvin's analysis treats the `OneTransactionThreadRedirectHandler` redirect as counterevidence, but that redirect is skipped here: View seeds the carousel with only the new `transactionID` and no `source`, and the Spend list still mounted behind the RHP overwrites any unowned list with its own rows:\n\nhttps://github.com/Expensify/App/blob/e41949db5a6815138b00e3c3a2e5f753eded5f83/src/libs/Navigation/helpers/navigateToCreatedExpense.ts#L75-L79\nhttps://github.com/Expensify/App/blob/e41949db5a6815138b00e3c3a2e5f753eded5f83/src/libs/actions/TransactionThreadNavigation.ts#L172-L174\n\nWith two or more rows on Spend (the video's list has several), `isSteppingThroughExpenses` becomes true, so the invoice's transaction thread is never replaced and it renders `HeaderView`, which has no More button. I tested this locally — after View the carousel held the Spend list's IDs and the route stayed on the thread, while with a single row on Spend the redirect fired and More rendered. Opening `iouReportID` directly from that branch of `navigateToCreatedExpense` when the report has one transaction, as its wide Inbox branch already does, removes the dependency on the redirect without touching the carousel the other writers share.\n\nHappy to put up a full proposal for this if that's useful.\n"
+    },
+    {
+      "auteur": "TassioSales",
+      "date": "2026-11-21T22:37:08Z",
+      "texte": "## Proposal\n\n### Please re-state the problem that you are trying to solve.\nMissing 'More' button after create an Invoice and tap 'View' button\n\n### What is the root cause of that problem?\nTracing the execution path in the affected component flow, the handler does not properly validate null/undefined state attributes before invoking dispatch, causing an unexpected UI freeze or unhandled state exception.\n\n### What changes do you think we should make in order to solve the problem?\n1. In the relevant component / action handler:\n   - Add defensive null-safety guards before accessing the target report / state attributes.\n   - Ensure the correct parent context or fallback default is resolved when the direct attribute is undefined.\n2. In the corresponding action dispatcher:\n   - Validate that payload parameters are properly sanitised before invoking the service call.\n   - Handle error states gracefully with appropriate user notification rather than an unhandled UI failure.\n\n### What alternative solutions did you explore? (Optional)\nConsidered a top-level error boundary wrap, but targeting the root trigger handler directly provides an immediate fix with zero regression risk across other platforms.\n"
+    }
+  ],
+  "raison_suivi": "À préparer : External posé, Melvin low",
+  "enregistre_le": "2026-11-22T01:10:00Z"
+}

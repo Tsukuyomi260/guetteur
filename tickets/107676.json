@@ -1,0 +1,52 @@
+{
+  "numero": 107676,
+  "repo": "Expensify/App",
+  "titre": "[$175] WS Settings - Error message when creating an agent with a People Admin",
+  "lien": "https://github.com/Expensify/App/issues/107676",
+  "montant": 175,
+  "labels": [
+    "External",
+    "Daily",
+    "Bug"
+  ],
+  "assignes": [
+    "Ollyws"
+  ],
+  "plateformes": [
+    "Android: App",
+    "iOS: App",
+    "Windows: Chrome",
+    "MacOS: Chrome Safari"
+  ],
+  "corps": "If you haven’t already, check out our [contributing guidelines](https://github.com/Expensify/ReactNativeChat/blob/main/contributingGuides/CONTRIBUTING.md) for onboarding. To join our Slack channel, fill out [this form](https://forms.gle/Q7hnhUJPnQCK7Fe56).\n___\n\n**Version Number:** 9.5.52-1\n**Reproducible in staging?:** Yes\n**Reproducible in production?:** Yes\n**If this was caught during regression testing, add the test name, ID and link from BrowserStack:** https://test-management.browserstack.com/projects/2219752/folder/57609992/test-cases/153204338\n**Email or phone of affected tester (no customers):** gatantm+61015@gmail.com\n**Issue reported by:** Applause Internal Team\n**Bug source:** Exploratory - Significant User Experience Deterioration\n**Device used:** macOS Safari\n**App Component:** Workspace Settings\n\n## Action Performed:\n1. Launch new expensify logged in as a People Admin of a WS (or invite your user as one from another account)\n2. Go to WS > Open the WS where you are People Admin \n3. Open Agents > New Agent\n4. Select any of the available options > Confirm\n5. Wait a couple of seconds\n\n## Expected Result:\nA new agent is added without issues or the option is not available\n\n## Actual Result:\nThe app shows an error when creating an agent as a People admin\n\n## Workaround:\nUnknown\n\n## Platforms:\n- [x] Android: App\n- [ ] Android: mWeb Chrome\n- [x] iOS: App\n- [ ] iOS: mWeb Safari\n- [ ] iOS: mWeb Chrome\n- [x] Windows: Chrome\n- [x] MacOS: Chrome Safari\n\n## Screenshots/Videos\n\nhttps://github.com/user-attachments/assets/533ffe41-b2b1-4638-94ee-a5e04d8b0b5a\n\n[View all open jobs on GitHub](https://github.com/Expensify/App/issues?q=is%3Aopen+is%3Aissue+label%3A%22Help+Wanted%22)\n\n\n> **Applause Internal Information**\n> Exported by: Alberto Gutierrez\n> Bug ID: 7320329\n<details><summary>Upwork Automation - Do Not Edit</summary>\n    <ul>\n        <li>Upwork Job URL: <a href=\"https://www.upwork.com/jobs/~022124254006507039510\">https://www.upwork.com/jobs/~022124254006507039510</a></li>\n        <li>Upwork Job ID: 2124254006507039510</li>\n        <li>Last Price Increase: 2026-11-21</li>\n    </ul>\n</details>",
+  "melvin_confiance": "low",
+  "commentaires": [
+    {
+      "auteur": "applause-bot[bot]",
+      "date": "2026-11-21T21:25:59Z",
+      "texte": "While Applause doesn't embed attachments for this bug, here are the links for quick view:\nhttps://platform.applause.com/services/links/v1/external/aab6984f08ef5be33ec02c272120443659dce60b8bb94ed8154486376dd20fcc"
+    },
+    {
+      "auteur": "expensify-chore-bot[bot]",
+      "date": "2026-11-21T21:29:53Z",
+      "texte": "Triggered auto assignment to Contributor-plus team member for initial proposal review - @Ollyws (`External`)"
+    },
+    {
+      "auteur": "expensify-chore-bot[bot]",
+      "date": "2026-11-21T21:29:58Z",
+      "texte": "Job added to Upwork: https://www.upwork.com/jobs/~022124254006507039510"
+    },
+    {
+      "auteur": "MelvinBot",
+      "date": "2026-11-21T21:29:58Z",
+      "texte": "> ⚠️ **Preliminary analysis (low confidence)** — the frontend behavior is verified, but the underlying failure is not.\n\n### Findings\n\nThis is **not simply a missing permission check**: People Admins explicitly receive Agents write access, and the creation flow checks that permission.\n\nAll agent templates share the same creation request. The UI proceeds optimistically before the server confirms success, which explains how an error can appear several seconds later—but does not establish why creation failed.\n\n<details>\n<summary>Code evidence</summary>\n\n- [permissions.ts:124–131](https://github.com/Expensify/App/blob/e41949db5a6815138b00e3c3a2e5f753eded5f83/src/libs/PolicyUtils/permissions.ts#L124-L131) explicitly grants People Admins Agents write access.\n- [WorkspaceAgentsPage.tsx:89–110](https://github.com/Expensify/App/blob/e41949db5a6815138b00e3c3a2e5f753eded5f83/src/pages/workspace/WorkspaceAgentsPage.tsx#L89-L110) gates both creation entry points on that permission.\n- [Agent.ts:210–216](https://github.com/Expensify/App/blob/e41949db5a6815138b00e3c3a2e5f753eded5f83/src/libs/actions/Agent.ts#L210-L216) sends `CreateCompanyAgent` with optimistic updates.\n- [DynamicAddAgentPage.tsx:206–235](https://github.com/Expensify/App/blob/e41949db5a6815138b00e3c3a2e5f753eded5f83/src/pages/settings/Agents/DynamicAddAgentPage.tsx#L206-L235) navigates after a local write rather than server confirmation.\n\nThese findings describe the inspected revision; equivalence to reported version 9.5.52-1 was not verified.\n\n</details>\n\n### Unresolved cause\n\nA frontend/backend permission mismatch is plausible, but validation or downstream agent provisioning could also explain the failure. The delayed error alone cannot distinguish them.\n\nProduction confirmation was blocked because log-query tools were unavailable. No browser reproduction was performed.\n\n### Next evidence needed\n\nCapture the failing `CreateCompanyAgent` response—including its result code, message, and requested agent role—and compare People Admin versus Workspace Admin creation in the same workspace.\n\n**Do not hide creation or broaden permissions yet.** The response must first establish whether creation is intentionally restricted, incorrectly rejected, or succeeds before a subsequent operation fails. If the fault is outside App, escalate to an internal engineer with access to the responsible repository.\n\n---\n**Next Steps:** Reply with `@MelvinBot <your feedback>` to refine this analysis.\n\n\n---\n_[view run](https://github.com/Expensify/melvin/actions/runs/44951511736)_\n"
+    },
+    {
+      "auteur": "TassioSales",
+      "date": "2026-11-21T22:36:06Z",
+      "texte": "## Proposal\n\n### Please re-state the problem that you are trying to solve.\nWS Settings - Error message when creating an agent with a People Admin\n\n### What is the root cause of that problem?\nTracing the execution path in the affected component flow, the handler does not properly validate null/undefined state attributes before invoking dispatch, causing an unexpected UI freeze or unhandled state exception.\n\n### What changes do you think we should make in order to solve the problem?\n1. In the relevant component / action handler:\n   - Add defensive null-safety guards before accessing the target report / state attributes.\n   - Ensure the correct parent context or fallback default is resolved when the direct attribute is undefined.\n2. In the corresponding action dispatcher:\n   - Validate that payload parameters are properly sanitised before invoking the service call.\n   - Handle error states gracefully with appropriate user notification rather than an unhandled UI failure.\n\n### What alternative solutions did you explore? (Optional)\nConsidered a top-level error boundary wrap, but targeting the root trigger handler directly provides an immediate fix with zero regression risk across other platforms.\n"
+    }
+  ],
+  "raison_suivi": "À préparer : External posé, Melvin low",
+  "enregistre_le": "2026-11-22T01:10:00Z"
+}

@@ -6,7 +6,9 @@
     "107642:preparer": "2026-11-21T07:25:10Z",
     "107643:preparer": "2026-11-21T07:25:10Z",
     "107644:preparer": "2026-11-21T07:25:10Z",
-    "107674:preparer": "2026-11-21T21:03:09Z"
+    "107674:preparer": "2026-11-21T21:03:09Z",
+    "107675:preparer": "2026-11-22T01:10:00Z",
+    "107676:preparer": "2026-11-22T01:10:00Z"
   },
   "suivis": {
     "107511": {
@@ -46,7 +48,7 @@
       ],
       "ferme": false,
       "help_wanted": false,
-      "propositions": 3,
+      "propositions": 4,
       "recommande": false
     },
     "107644": {
@@ -56,7 +58,25 @@
       ],
       "ferme": false,
       "help_wanted": false,
-      "propositions": 0,
+      "propositions": 1,
+      "recommande": false
+    },
+    "107675": {
+      "assignes": [
+        "cretadn22"
+      ],
+      "ferme": false,
+      "help_wanted": false,
+      "propositions": 1,
+      "recommande": false
+    },
+    "107676": {
+      "assignes": [
+        "Ollyws"
+      ],
+      "ferme": false,
+      "help_wanted": false,
+      "propositions": 1,
       "recommande": false
     }
   }
