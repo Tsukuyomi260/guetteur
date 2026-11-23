@@ -1,0 +1,35 @@
+{
+  "numero": 107765,
+  "repo": "Expensify/App",
+  "titre": "[$175] [Sentry: APP-PHC] IllegalStateException: FragmentManager is already executing transactions",
+  "lien": "https://github.com/Expensify/App/issues/107765",
+  "montant": 175,
+  "labels": [
+    "External",
+    "Daily",
+    "Task"
+  ],
+  "assignes": [
+    "mountiny",
+    "truph01"
+  ],
+  "plateformes": [
+    "non précisées"
+  ],
+  "corps": "### Sentry\nhttps://expensify.sentry.io/issues/APP-PHC\n\n### Impact\n- 1 user, 1 fatal event at investigation time.\n- First seen: 2026-11-23 09:41 UTC.\n- Platform: Android HybridApp, Android 15.\n- Release: `new.expensify@9.5.50-0`.\n- Screen: Home, native bottom tabs.\n- Mechanism: unhandled `UncaughtExceptionHandler`.\n\n### Relevant frames\n```text\nyapl.android.YaplActivityBase.onStart:424\nTabsScreenFragment.onStart:26\nTabsScreenEventEmitter.emitOnWillAppear\nReanimated NodesManager → Fabric mount updates\nTabsContainer.applyNextSelectedFragmentToFragmentManagerSync:631\nBackStackRecord.commitNowAllowingStateLoss\nFragmentManager.ensureExecReady:1947\n```\n\n### Root-cause analysis\nThe stack shows a re-entrant native fragment transaction. While Android’s FragmentManager starts fragments, `TabsScreenFragment.onStart()` emits `onWillAppear`. Reanimated synchronously processes Fabric updates, triggering a tab-selection change that calls `commitNowAllowingStateLoss()` before the lifecycle transition finishes.\n\nThe conflicting transaction originates in bundled `react-native-screens` native tabs; `YaplActivityBase.onStart` is the outer lifecycle entry point. Reproduction is not yet verified.\n\n### Suggested fix\nDefer pending native-tab selection updates until the current FragmentManager lifecycle/transaction dispatch completes. Preserve pending selection state and validate that the container remains attached before applying it. Investigate an upstream fix or targeted dependency patch rather than swallowing the exception.\n\nTest background/foreground transitions with pending tab changes and Reanimated updates.\n\n### Related issues\n#102742 and #71465 share the exception but concern legacy `PageNavigator` navigation, not this native-tabs path. Searches of Expensify/App and Expensify/Expensify found no matching issue.\n<details><summary>Upwork Automation - Do Not Edit</summary>\n    <ul>\n        <li>Upwork Job URL: <a href=\"https://www.upwork.com/jobs/~022124948486093168379\">https://www.upwork.com/jobs/~022124948486093168379</a></li>\n        <li>Upwork Job ID: 2124948486093168379</li>\n        <li>Last Price Increase: 2026-11-23</li>\n    </ul>\n</details>",
+  "melvin_confiance": "aucune",
+  "commentaires": [
+    {
+      "auteur": "expensify-chore-bot[bot]",
+      "date": "2026-11-23T19:29:27Z",
+      "texte": "Triggered auto assignment to Contributor-plus team member for initial proposal review - @truph01 (`External`)"
+    },
+    {
+      "auteur": "expensify-chore-bot[bot]",
+      "date": "2026-11-23T19:29:36Z",
+      "texte": "Job added to Upwork: https://www.upwork.com/jobs/~022124948486093168379"
+    }
+  ],
+  "raison_suivi": "À préparer : External posé, Melvin aucune",
+  "enregistre_le": "2026-11-23T22:13:50Z"
+}
