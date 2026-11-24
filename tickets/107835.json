@@ -1,0 +1,64 @@
+{
+  "numero": 107835,
+  "repo": "Expensify/App",
+  "titre": "[$175] Add an HR tile to the More Features onboarding step",
+  "lien": "https://github.com/Expensify/App/issues/107835",
+  "montant": 175,
+  "labels": [
+    "External",
+    "Daily"
+  ],
+  "assignes": [
+    "dylanexpensify",
+    "TaduJR"
+  ],
+  "plateformes": [
+    "non précisées"
+  ],
+  "corps": "## Proposal\nAdd an optional **HR** tile under “Enable additional features” in the More Features onboarding step, matching the existing tile layout.\n\n- Label: **HR**\n- Description: “Connect HR tools and keep employee approvals in sync.”\n- Leave it unselected by default.\n- Selecting it should enable HR using the existing feature-enablement behavior, respecting the Control-plan requirement.\n- Users must be able to continue without selecting HR.\n\n## Context\nIn the previous onboarding A/B test, 10% of users who landed on the variant enabled HR.\n\nAsking which HR provider a user uses is a separate experiment and is **out of scope**.\n\n## Reference\n![More Features onboarding mockup with an optional HR tile](https://melvinbot-assets.exops.io/0-Screenshot_2026-11-23_at_3.29.57_PM-04a9b800-c3db-478b-aed4-07a9778e4bf1.png)\n\n[Slack discussion](https://expensify.slack.com/archives/C07HPDRELLD/p1795447788536989)\n<details><summary>Upwork Automation - Do Not Edit</summary>\n    <ul>\n        <li>Upwork Job URL: <a href=\"https://www.upwork.com/jobs/~022125199480852273707\">https://www.upwork.com/jobs/~022125199480852273707</a></li>\n        <li>Upwork Job ID: 2125199480852273707</li>\n        <li>Last Price Increase: 2026-11-24</li>\n    </ul>\n</details>",
+  "melvin_confiance": "low",
+  "commentaires": [
+    {
+      "auteur": "expensify-chore-bot[bot]",
+      "date": "2026-11-24T12:06:50Z",
+      "texte": "Triggered auto assignment to Contributor-plus team member for initial proposal review - @TaduJR (`External`)"
+    },
+    {
+      "auteur": "dylanexpensify",
+      "date": "2026-11-24T12:06:57Z",
+      "texte": "@TaduJR let's use Mel here"
+    },
+    {
+      "auteur": "expensify-chore-bot[bot]",
+      "date": "2026-11-24T12:06:57Z",
+      "texte": "Job added to Upwork: https://www.upwork.com/jobs/~022125199480852273707"
+    },
+    {
+      "auteur": "TaduJR",
+      "date": "2026-11-24T12:08:01Z",
+      "texte": "> @TaduJR let's use Mel here\n\nSure thing\n\n@MelvinBot \n\nPlease post a proposal"
+    },
+    {
+      "auteur": "MelvinBot",
+      "date": "2026-11-24T12:13:03Z",
+      "texte": "## Proposal\n\n### What is the root cause of that problem?\n\nHR is missing from the onboarding feature list and tile definitions, so users cannot select it during onboarding. The App already has an HR feature identifier and enablement action.\n\n<details>\n<summary>Code references</summary>\n\n- [OnboardingFeatures.ts:6–47](https://github.com/Expensify/App/blob/b7bd2e60a86738b411cb0b766ecabd0b34c6351c/src/libs/actions/Welcome/OnboardingFeatures.ts#L6-L47): supported onboarding features and defaults.\n- [BaseOnboardingInterestedFeatures.tsx:47–139](https://github.com/Expensify/App/blob/b7bd2e60a86738b411cb0b766ecabd0b34c6351c/src/pages/OnboardingInterestedFeatures/BaseOnboardingInterestedFeatures.tsx#L47-L139): tile definitions.\n- [Policy.ts:5231–5272](https://github.com/Expensify/App/blob/b7bd2e60a86738b411cb0b766ecabd0b34c6351c/src/libs/actions/Policy/Policy.ts#L5231-L5272): existing HR enablement action.\n\n</details>\n\n### What changes do you think we should make in order to solve the problem?\n\n1. Register `IS_HR_ENABLED` as an optional onboarding feature, with `requiresUpdate: true` and no default selection.\n2. Add its tile using the existing layout:\n   - **HR**\n   - “Connect HR tools and keep employee approvals in sync.”\n   - Appropriate illustration, localized description, and tile/checkbox Sentry labels.\n3. Reuse the existing selection and persistence flow. Users can leave HR unchecked and continue; no provider question or connection step is added.\n\n**Enablement prerequisite:** Adding the tile alone does not prove that HR becomes enabled. Before accepting this as a complete App-only change, verify that the onboarding APIs apply `isHREnabled` and enforce Control for both new and existing workspaces.\n\n<details>\n<summary>Why this verification matters</summary>\n\nFor new workspaces, [`requiresUpdate` selects Control](https://github.com/Expensify/App/blob/b7bd2e60a86738b411cb0b766ecabd0b34c6351c/src/libs/actions/Policy/Policy.ts#L3048-L3052), and [feature values are submitted to workspace creation](https://github.com/Expensify/App/blob/b7bd2e60a86738b411cb0b766ecabd0b34c6351c/src/libs/actions/Policy/Policy.ts#L3429-L3454).\n\nHowever, [existing-workspace onboarding skips workspace creation](https://github.com/Expensify/App/blob/b7bd2e60a86738b411cb0b766ecabd0b34c6351c/src/hooks/useCompleteOnboarding.ts#L68-L132). Its server-side HR enablement and plan handling could not be confirmed from this checkout. If support is missing, an internal engineer must assess the required backend changes.\n\n</details>\n\n**Validation:** Cover unchecked defaults, selection/deselection, continuing without HR, persistence through the accounting step, Control selection, and actual enabled state after completion. Include existing Collect and Control workspaces—not just submitted API payloads.\n\n---\n\n**Next Steps for Contributor+ team:**  \n**To accept:** After resolving the enablement prerequisite, `@MelvinBot implement [this](https://github.com/Expensify/App/issues/107835)` to create a draft PR.  \n**To refine:** `@MelvinBot <your feedback>`  \n**To reject:** Explain why you are rejecting Melvin's proposal.\n\n\n---\n_[view run](https://github.com/Expensify/melvin/actions/runs/45390599990)_\n"
+    },
+    {
+      "auteur": "TaduJR",
+      "date": "2026-11-24T13:14:02Z",
+      "texte": "@MelvinBot implement [this](https://github.com/Expensify/App/issues/107835)"
+    },
+    {
+      "auteur": "MelvinBot",
+      "date": "2026-11-24T13:17:28Z",
+      "texte": "🤖 **Implementation blocked**\n\nThe proposal’s enablement prerequisite remains unresolved:\n\n- New-workspace onboarding forwards feature selections and can select Control.\n- [Existing-workspace onboarding skips workspace creation](https://github.com/Expensify/App/blob/c20b230fdfef7e2162e9de0701ddcb5d4ec8b121/src/hooks/useCompleteOnboarding.ts#L76-L124), without explicitly upgrading the workspace or enabling HR.\n- Existing tests mock API responses, so they cannot confirm the required backend behavior.\n\nI checked the current App implementation and tests, but backend repository access returned **404**. Adding the tile now could offer a selection that does not actually enable HR.\n\n**To unblock:** An internal engineer needs to confirm that `CreateWorkspace.features.isHREnabled` and `CompleteGuidedSetup.selectedInterestedFeatures` enable HR and enforce Control, including for existing Collect workspaces—or identify the backend changes needed.\n\nNo code changes or PR were created.\n\n\n---\n_[view run](https://github.com/Expensify/melvin/actions/runs/45401323090)_\n"
+    },
+    {
+      "auteur": "kevinjosh10",
+      "date": "2026-11-24T16:20:43Z",
+      "texte": "## Proposal\n\n### Please re-state the problem that we are trying to solve in this issue.\nIn the More Features onboarding step (`BaseOnboardingInterestedFeatures.tsx`), users can select which features they are interested in enabling for their workspace. An optional HR tile is missing from the \"Enable additional features you may be interested in\" section.\n\n### What is the root cause of that problem?\n`CONST.POLICY.MORE_FEATURES.IS_HR_ENABLED` (`isHREnabled`) is already defined as a first-class feature in `CONST.ts` and supported by `PolicyUtils/policyType.ts` and `enablePolicyHR` in `src/libs/actions/Policy/Policy.ts`. However:\n1. It is not listed in `OnboardingFeatureID` or `ONBOARDING_FEATURES` within `src/libs/actions/Welcome/OnboardingFeatures.ts`.\n2. It lacks tile metadata in `featureDetails` inside `src/pages/OnboardingInterestedFeatures/BaseOnboardingInterestedFeatures.tsx`.\n\n### What changes do you think we should make in order to solve the problem?\n1. **Register Feature in `src/libs/actions/Welcome/OnboardingFeatures.ts`:**\nAdd `IS_HR_ENABLED` to `OnboardingFeatureID` and `ONBOARDING_FEATURES`:\n```ts\ntype OnboardingFeatureID = ValueOf<\n    Pick<\n        typeof CONST.POLICY.MORE_FEATURES,\n        | ...\n        | 'IS_HR_ENABLED'\n    >\n>;\n\nconst ONBOARDING_FEATURES: OnboardingFeatureConfig[] = [\n    ...\n    {id: CONST.POLICY.MORE_FEATURES.IS_HR_ENABLED, requiresUpdate: true},\n];\n```\n*Note:* Setting `requiresUpdate: true` ensures that when creating a new workspace in `src/libs/actions/Policy/Policy.ts` (line 3049), `isCorporateFeature` evaluates to `true` (`featuresMap?.some((feature) => !feature.enabledByDefault && feature.enabled && feature.requiresUpdate)`), automatically provisioning a Control-tier policy (`CONST.POLICY.TYPE.CORPORATE`) to respect the Control-plan requirement.\n\n2. **Add Tile Metadata in `src/pages/OnboardingInterestedFeatures/BaseOnboardingInterestedFeatures.tsx`:**\nAdd `illustrations.HR` (or fallback illustration) to `useMemoizedLazyIllustrations` and configure `featureDetails`:\n```tsx\n[CONST.POLICY.MORE_FEATURES.IS_HR_ENABLED]: {\n    title: translate('workspace.moreFeatures.hr.title'),\n    subtitle: translate('workspace.moreFeatures.hr.subtitle'),\n    icon: illustrations.HR ?? illustrations.Workflows,\n    sentryLabel: CONST.SENTRY_LABEL.ONBOARDING.INTERESTED_FEATURES_ITEM.HR,\n    checkboxSentryLabel: CONST.SENTRY_LABEL.ONBOARDING.INTERESTED_FEATURES_CHECKBOX.HR,\n},\n```\n\n3. **Add Translation Strings in `src/languages/en.ts`:**\nUnder `workspace.moreFeatures`:\n```ts\nhr: {\n    title: 'HR',\n    subtitle: 'Connect HR tools and keep employee approvals in sync.',\n},\n```\n\n4. **Sentry Constants in `src/CONST/index.ts`:**\nAdd `HR: 'hr'` under `SENTRY_LABEL.ONBOARDING.INTERESTED_FEATURES_ITEM` and `SENTRY_LABEL.ONBOARDING.INTERESTED_FEATURES_CHECKBOX`.\n\n### What alternative solutions did you explore? (Optional)\nNone needed. Reusing the existing `ONBOARDING_FEATURES` schema with `requiresUpdate: true` seamlessly integrates HR with existing multi-feature persistence, the accounting next-step check, and workspace creation without custom branching.\n\n### What specific scenarios should we cover in automated tests to prevent reoccurrence?\nAdd unit tests in `tests/unit/OnboardingInterestedFeaturesTest.tsx`:\n1. **Unselected by Default:** Verify that the HR tile renders in the \"Enable additional features\" section with `isChecked: false`.\n2. **Continue without HR:** Verify that tapping \"Continue\" without selecting HR proceeds normally without enabling `isHREnabled`.\n3. **Control Plan Provisioning:** Verify that selecting the HR tile produces `featuresMap` containing `{id: 'isHREnabled', enabled: true, requiresUpdate: true}` and successfully sets `isCorporateFeature = true`.\n\n### Contributor details?\n- **Email:** lkevinjosh10@gmail.com\n- **Upwork Profile:** https://www.upwork.com/freelancers/~0131dae36abcf59374"
+    }
+  ],
+  "raison_suivi": "À préparer : External posé, Melvin low",
+  "enregistre_le": "2026-11-24T17:34:13Z"
+}

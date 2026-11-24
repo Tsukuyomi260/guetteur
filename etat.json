@@ -1,5 +1,6 @@
 {
   "deja_signale": {
+    "106630:jouable": "2026-11-24T17:34:13Z",
     "107511:preparer": "2026-11-20T18:41:56Z",
     "107597:preparer": "2026-11-20T18:41:56Z",
     "107620:preparer": "2026-11-21T00:17:35Z",
@@ -18,7 +19,11 @@
     "107791:preparer": "2026-11-24T06:06:01Z",
     "107795:preparer": "2026-11-24T06:06:01Z",
     "107806:preparer": "2026-11-24T06:06:01Z",
-    "107808:preparer": "2026-11-24T06:06:01Z"
+    "107808:preparer": "2026-11-24T06:06:01Z",
+    "107835:preparer": "2026-11-24T17:34:13Z",
+    "107841:preparer": "2026-11-24T17:34:13Z",
+    "107853:preparer": "2026-11-24T17:34:13Z",
+    "107862:preparer": "2026-11-24T17:34:13Z"
   },
   "suivis": {
     "107511": {
@@ -33,12 +38,12 @@
     },
     "107597": {
       "assignes": [
-        "garrettmknight",
-        "situchan"
+        "DylanDylann",
+        "garrettmknight"
       ],
       "ferme": false,
       "help_wanted": false,
-      "propositions": 2,
+      "propositions": 3,
       "recommande": false
     },
     "107642": {
@@ -54,7 +59,7 @@
     "107644": {
       "assignes": [
         "Julesssss",
-        "thesahindia"
+        "hoangzinh"
       ],
       "ferme": false,
       "help_wanted": false,
@@ -89,32 +94,13 @@
       "propositions": 0,
       "recommande": false
     },
-    "107766": {
-      "assignes": [
-        "linhvovan29546",
-        "mountiny"
-      ],
-      "ferme": false,
-      "help_wanted": false,
-      "propositions": 1,
-      "recommande": false
-    },
     "107795": {
       "assignes": [
         "nyomanjyotisa"
       ],
       "ferme": false,
       "help_wanted": false,
-      "propositions": 2,
-      "recommande": false
-    },
-    "107806": {
-      "assignes": [
-        "huult"
-      ],
-      "ferme": false,
-      "help_wanted": false,
-      "propositions": 0,
+      "propositions": 3,
       "recommande": false
     },
     "107808": {
@@ -123,7 +109,28 @@
       ],
       "ferme": false,
       "help_wanted": false,
-      "propositions": 2,
+      "propositions": 4,
+      "recommande": false
+    },
+    "107835": {
+      "assignes": [
+        "TaduJR",
+        "dylanexpensify"
+      ],
+      "ferme": false,
+      "help_wanted": false,
+      "propositions": 1,
+      "recommande": false
+    },
+    "107862": {
+      "assignes": [
+        "ShridharGoel",
+        "TaduJR",
+        "heyjennahay"
+      ],
+      "ferme": false,
+      "help_wanted": false,
+      "propositions": 0,
       "recommande": false
     }
   }

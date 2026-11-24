@@ -1,0 +1,46 @@
+{
+  "numero": 107862,
+  "repo": "Expensify/App",
+  "titre": "[$175] Search - Decide how selected people filters behave when switching workspaces",
+  "lien": "https://github.com/Expensify/App/issues/107862",
+  "montant": 175,
+  "labels": [
+    "External",
+    "Daily",
+    "Task"
+  ],
+  "assignes": [
+    "heyjennahay",
+    "ShridharGoel",
+    "TaduJR"
+  ],
+  "plateformes": [
+    "non précisées"
+  ],
+  "corps": "## Summary\nDecide how Search should handle selected people who have no reports in a newly selected workspace.\n\nThis is a follow-up to [Look up personal details on server in UserSelector](https://github.com/Expensify/App/pull/104303). In the [product decision requesting this follow-up](https://github.com/Expensify/App/pull/104303#issuecomment-7137481458), `heyjennahay` confirmed that the PR can proceed without changing the existing behavior and that an active filter should not simply be hidden.\n\n## Reproduction scenario\nPreconditions:\n- User A is an admin of Workspace X and Workspace Y.\n- Member B submitted reports in Workspace X and was subsequently removed from that workspace.\n- Member B was never a member of Workspace Y and has no reports there.\n\n1. As User A, go to Reports (Search).\n2. Open Filters > Workspace and select Workspace X.\n3. Open From, search for Member B, and select them.\n4. Change the Workspace filter to Workspace Y.\n5. Open From again.\n\n**Current behavior reported in the PR:** Member B remains visible and selected, although they have no reports in Workspace Y, resulting in empty search results. This is an existing selected-filter behavior, not a newly suggested person for Workspace Y.\n\n## Scope and considerations\n- Decide the intended UX when a workspace change makes an existing people selection irrelevant.\n- Do not merely hide an active selection: users must be able to understand and remove filters affecting their results.\n- Automatically clearing inapplicable selections was suggested, but has **not** been agreed as the solution. If chosen, validate against the new workspace's server results before removing selections so former members who do have reports there are retained.\n- Confirm whether the decision should apply consistently to From, To, Paid by, Assignee, and Attendee.\n\n## Acceptance criteria\n- [ ] Agree and document the product/design behavior for selected people with no reports in the newly selected workspace.\n- [ ] Implement the agreed behavior in the applicable people filters.\n- [ ] Verify the workspace-switch scenario above and ensure active filters cannot become hidden and impossible to remove.\n- [ ] Verify selected current/former members who do have reports in the destination workspace are handled correctly, including while the server lookup is pending.\n- [ ] Add regression coverage for the agreed behavior.\n\n## References\n- [Reviewer context and follow-up rationale](https://github.com/Expensify/App/pull/104303#issuecomment-6939591070)\n- [Product approval to track this separately](https://github.com/Expensify/App/pull/104303#issuecomment-7137481458)\n\n\n<details><summary>Issue Owner</summary>Current Issue Owner: @ShridharGoel</details>\n<details><summary>Upwork Automation - Do Not Edit</summary>\n    <ul>\n        <li>Upwork Job URL: <a href=\"https://www.upwork.com/jobs/~022125271470241962539\">https://www.upwork.com/jobs/~022125271470241962539</a></li>\n        <li>Upwork Job ID: 2125271470241962539</li>\n        <li>Last Price Increase: 2026-11-24</li>\n    </ul>\n</details>",
+  "melvin_confiance": "aucune",
+  "commentaires": [
+    {
+      "auteur": "TaduJR",
+      "date": "2026-11-24T16:52:19Z",
+      "texte": "Assigning @ShridharGoel @heyjennahay from https://github.com/Expensify/App/pull/104303#issuecomment-7137481458"
+    },
+    {
+      "auteur": "melvin-bot[bot]",
+      "date": "2026-11-24T16:52:32Z",
+      "texte": "@TaduJR — to hire @TaduJR on Upwork, add the External label so a job is created and the offer is sent automatically."
+    },
+    {
+      "auteur": "expensify-chore-bot[bot]",
+      "date": "2026-11-24T16:52:54Z",
+      "texte": "Current assignee @TaduJR is eligible for the External assigner, not assigning anyone new."
+    },
+    {
+      "auteur": "expensify-chore-bot[bot]",
+      "date": "2026-11-24T16:53:01Z",
+      "texte": "Job added to Upwork: https://www.upwork.com/jobs/~022125271470241962539"
+    }
+  ],
+  "raison_suivi": "À préparer : External posé, Melvin aucune",
+  "enregistre_le": "2026-11-24T17:34:13Z"
+}
