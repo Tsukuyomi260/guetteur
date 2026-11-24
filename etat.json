@@ -14,7 +14,11 @@
     "107757:preparer": "2026-11-23T22:13:50Z",
     "107765:preparer": "2026-11-23T22:13:50Z",
     "107766:preparer": "2026-11-23T22:13:50Z",
-    "107770:preparer": "2026-11-23T22:13:50Z"
+    "107770:preparer": "2026-11-23T22:13:50Z",
+    "107791:preparer": "2026-11-24T06:06:01Z",
+    "107795:preparer": "2026-11-24T06:06:01Z",
+    "107806:preparer": "2026-11-24T06:06:01Z",
+    "107808:preparer": "2026-11-24T06:06:01Z"
   },
   "suivis": {
     "107511": {
@@ -93,6 +97,33 @@
       "ferme": false,
       "help_wanted": false,
       "propositions": 1,
+      "recommande": false
+    },
+    "107795": {
+      "assignes": [
+        "nyomanjyotisa"
+      ],
+      "ferme": false,
+      "help_wanted": false,
+      "propositions": 2,
+      "recommande": false
+    },
+    "107806": {
+      "assignes": [
+        "huult"
+      ],
+      "ferme": false,
+      "help_wanted": false,
+      "propositions": 0,
+      "recommande": false
+    },
+    "107808": {
+      "assignes": [
+        "samranahm"
+      ],
+      "ferme": false,
+      "help_wanted": false,
+      "propositions": 2,
       "recommande": false
     }
   }
