@@ -1,0 +1,81 @@
+{
+  "numero": 107169,
+  "repo": "Expensify/App",
+  "titre": "[$175] [Sentry: APP-P9K] TypeError: Cannot read property 'at' of undefined in hasEnabledListValue",
+  "lien": "https://github.com/Expensify/App/issues/107169",
+  "montant": 175,
+  "labels": [
+    "External",
+    "Daily",
+    "Bug"
+  ],
+  "assignes": [
+    "mountiny",
+    "getusha",
+    "aimane-chnaif"
+  ],
+  "plateformes": [
+    "non précisées"
+  ],
+  "corps": "## Summary\nOpening the Report screen can trigger an unhandled, fatal exception while rendering report fields.\n\n- **Sentry:** https://expensify.sentry.io/issues/APP-P9K\n- **Impact:** 2 users, 5 events at investigation time\n- **First seen:** 2026-11-16 21:37 UTC\n- **Platform:** iOS HybridApp\n- **Release:** `new.expensify@9.5.36`\n- **Route:** Report screen (money request report view)\n\n## Top first-party frames\n```text\nsrc/libs/ReportUtils.ts:15482\n  hasEnabledListValue / shouldHideSingleReportField\n  reportField.disabledOptions.at(index)\n\nMoneyRequestViewReportFields.tsx:150\n  .filter((reportField) => !shouldHideSingleReportField(reportField))\n```\n\n## Root cause\n`hasEnabledListValue` iterates over `reportField.values` and unconditionally accesses `reportField.disabledOptions.at(index)`. When `values` contains entries but `disabledOptions` is undefined, this throws during rendering.\n\nThe error indicates a missing array, not an unsupported `.at()` method. Field merging does not normalize this property. The exact origin of the affected field remains unconfirmed.\n\n[Relevant code](https://github.com/Expensify/App/blob/5a6c4ed33e4b5fc705af584d35ad22a9137bf405/src/libs/ReportUtils.ts#L15489-L15502)\n\n## Suggested fix\nHandle an absent `disabledOptions` array safely, preserving the intended behavior that missing disabled flags mean enabled.\n\nAdd regression tests covering missing, empty, partially populated, and fully disabled arrays. Verify that report rendering no longer throws.\n\n## Related issues\nApp#103935 and App#102788 concern report-field visibility, not this crash.\n\n[Investigation](https://expensify.slack.com/archives/C027V2LD9D1/p1794928186014059)\n<details><summary>Upwork Automation - Do Not Edit</summary>\n    <ul>\n        <li>Upwork Job URL: <a href=\"https://www.upwork.com/jobs/~022122803460444526222\">https://www.upwork.com/jobs/~022122803460444526222</a></li>\n        <li>Upwork Job ID: 2122803460444526222</li>\n        <li>Last Price Increase: 2026-11-17</li>\n    </ul>\n</details>\n\n<details><summary>Issue Owner</summary>Current Issue Owner: @getusha</details>",
+  "melvin_confiance": "low",
+  "commentaires": [
+    {
+      "auteur": "expensify-chore-bot[bot]",
+      "date": "2026-11-17T21:25:55Z",
+      "texte": "Triggered auto assignment to Contributor-plus team member for initial proposal review - @aimane-chnaif (`External`)"
+    },
+    {
+      "auteur": "expensify-chore-bot[bot]",
+      "date": "2026-11-17T21:26:01Z",
+      "texte": "Job added to Upwork: https://www.upwork.com/jobs/~022122803460444526222"
+    },
+    {
+      "auteur": "mountiny",
+      "date": "2026-11-17T21:26:43Z",
+      "texte": "@MelvinBot can you propose fix?"
+    },
+    {
+      "auteur": "MelvinBot",
+      "date": "2026-11-17T21:31:06Z",
+      "texte": "## Proposal\n\n### What is the root cause of that problem?\n\nA list report field with populated `values` but missing `disabledOptions` crashes the visibility check because it calls `.at()` on the missing array.\n\n**A helper-only fix is insufficient:** editable fields subsequently perform the same unsafe access while building their dropdown options.\n\n<details>\n<summary>Code evidence and confidence</summary>\n\n- [ReportUtils.ts:15544–15557](https://github.com/Expensify/App/blob/ccbcf4466048f0b1fcc5669c8333f5355de4b182/src/libs/ReportUtils.ts#L15544-L15557) iterates over values and unconditionally reads `disabledOptions.at(index)`.\n- [ReportUtils.ts:5918–5955](https://github.com/Expensify/App/blob/ccbcf4466048f0b1fcc5669c8333f5355de4b182/src/libs/ReportUtils.ts#L5918-L5955) merges report/policy fields without supplying missing flags.\n- [MoneyRequestViewReportFields.tsx:146–177](https://github.com/Expensify/App/blob/ccbcf4466048f0b1fcc5669c8333f5355de4b182/src/components/MoneyRequestReportView/MoneyRequestViewReportFields.tsx#L146-L177) runs the visibility filter during rendering.\n- [ReportFieldInlineInput.tsx:194–202](https://github.com/Expensify/App/blob/ccbcf4466048f0b1fcc5669c8333f5355de4b182/src/components/MoneyRequestReportView/ReportFieldInlineInput.tsx#L194-L202) repeats the unsafe access for editable dropdowns.\n\n**Confidence: medium.** The code explains the reported exception, but production payloads and exact release-source mapping were not independently verified. Sentry/log access was unavailable; the origin of the missing array remains unknown. No runtime reproduction or tests were run.\n\nAn empty flags array is already safe. Missing `values` would instead fail at `.some()`, so that does not explain the supplied error.\n\n</details>\n\n### What changes do you think we should make in order to solve the problem?\n\nUse `!disabledOptions?.at(index)` when checking each value’s disabled flag. This preserves existing semantics: absent flags mean enabled; explicitly disabled values remain excluded.\n\nApply this consistently to the visibility helper, inline dropdown, dynamic editor, and initial-value picker so the fix does not simply move the crash downstream.\n\n<details>\n<summary>Additional locations and regression coverage</summary>\n\nAdditional unsafe readers:\n- [DynamicEditReportFieldPage.tsx:189–195](https://github.com/Expensify/App/blob/ccbcf4466048f0b1fcc5669c8333f5355de4b182/src/pages/DynamicEditReportFieldPage.tsx#L189-L195)\n- [ReportFieldsInitialListValuePicker.tsx:20–32](https://github.com/Expensify/App/blob/ccbcf4466048f0b1fcc5669c8333f5355de4b182/src/pages/workspace/reports/InitialListValueSelector/ReportFieldsInitialListValuePicker.tsx#L20-L32)\n\nExtend [existing visibility tests](https://github.com/Expensify/App/blob/ccbcf4466048f0b1fcc5669c8333f5355de4b182/tests/unit/ReportUtilsTest.ts#L25467-L25531) to cover missing, empty, shorter, mixed, and fully disabled flag arrays, plus empty values.\n\nExtend [report-field rendering tests](https://github.com/Expensify/App/blob/ccbcf4466048f0b1fcc5669c8333f5355de4b182/tests/ui/MoneyRequestViewReportFieldsTest.tsx#L441-L485) to verify a field with omitted flags renders, opens, and accepts a selection. Helper tests alone would miss the second crash.\n\n</details>\n\n### What alternative solutions did you explore? (Optional)\n\nHiding fields whenever flags are missing would prevent the exception but incorrectly hide enabled choices. Reusing old report flags while adopting policy values risks misaligning positional flags.\n\n**Related issue:** [Disabled list field appears after deletion](https://github.com/Expensify/App/issues/103935) concerns the same visibility area but reports different behavior; it is not a confirmed duplicate.\n\n---\n**Next Steps for Contributor+ team:**\n**To accept:** `@MelvinBot implement [this](https://github.com/Expensify/App/issues/107169)` to create a draft PR.\n**To refine:** `@MelvinBot <your feedback>`\n**To reject:** Explain why you are rejecting Melvin's proposal.\n\n\n---\n_[view run](https://github.com/Expensify/melvin/actions/runs/44179736806)_\n"
+    },
+    {
+      "auteur": "MelvinBot",
+      "date": "2026-11-17T21:33:52Z",
+      "texte": "## Proposal\n\n### What is the root cause of that problem?\n\nThe report-field visibility check assumes `disabledOptions` always exists. When a list has values but no disabled-flags array, accessing `.at(index)` throws during rendering.\n\nAn editable dropdown repeats the same access, so fixing only the visibility check would move the crash downstream.\n\n<details>\n<summary>Supporting code</summary>\n\n- [ReportUtils.ts:15544–15557](https://github.com/Expensify/App/blob/ccbcf4466048f0b1fcc5669c8333f5355de4b182/src/libs/ReportUtils.ts#L15544-L15557): unsafe visibility check.\n- [ReportFieldInlineInput.tsx:194–202](https://github.com/Expensify/App/blob/ccbcf4466048f0b1fcc5669c8333f5355de4b182/src/components/MoneyRequestReportView/ReportFieldInlineInput.tsx#L194-L202): unsafe dropdown filtering.\n\nThe code supports this mechanism; the production origin of the missing array remains unconfirmed.\n\n</details>\n\n### What changes do you think we should make in order to solve the problem?\n\nUse `!reportField.disabledOptions?.at(index)` in both checks. Continue iterating over `values`: missing flags should mean enabled, while explicit `true` flags should disable their corresponding options.\n\nApply the same guard to the other dropdown readers for consistent handling.\n\n<details>\n<summary>Other readers and regression tests</summary>\n\nOther readers:\n- [DynamicEditReportFieldPage.tsx:189–195](https://github.com/Expensify/App/blob/ccbcf4466048f0b1fcc5669c8333f5355de4b182/src/pages/DynamicEditReportFieldPage.tsx#L189-L195)\n- [ReportFieldsInitialListValuePicker.tsx:20–32](https://github.com/Expensify/App/blob/ccbcf4466048f0b1fcc5669c8333f5355de4b182/src/pages/workspace/reports/InitialListValueSelector/ReportFieldsInitialListValuePicker.tsx#L20-L32)\n\nExtend [visibility tests](https://github.com/Expensify/App/blob/ccbcf4466048f0b1fcc5669c8333f5355de4b182/tests/unit/ReportUtilsTest.ts#L25467-L25531) for missing, empty, shorter, mixed, and fully disabled arrays, plus empty values.\n\nExtend [rendering tests](https://github.com/Expensify/App/blob/ccbcf4466048f0b1fcc5669c8333f5355de4b182/tests/ui/MoneyRequestViewReportFieldsTest.tsx#L441-L485) to verify a dropdown with omitted flags renders and accepts a selection. These are proposed tests, not executed results.\n\n</details>\n\n### What alternative solutions did you explore? (Optional)\n\nHiding fields when flags are absent would avoid the exception but incorrectly hide enabled options.\n\n---\n**Next Steps for Contributor+ team:**\n**To accept:** `@MelvinBot implement [this](https://github.com/Expensify/App/issues/107169#issuecomment-6961572298)` to create a draft PR.\n**To refine:** `@MelvinBot <your feedback>`\n**To reject:** Explain why you are rejecting Melvin's proposal.\n\n\n---\n_[view run](https://github.com/Expensify/melvin/actions/runs/44179891675)_\n"
+    },
+    {
+      "auteur": "fitzyracing1",
+      "date": "2026-11-17T22:03:58Z",
+      "texte": "## Proposal\n\n### Please re-state the problem that we are trying to solve in this issue.\nOpening a money request report crashes with `TypeError: Cannot read property 'at' of undefined` in `hasEnabledListValue` (Sentry APP-P9K).\n\n### What is the root cause of that problem?\n`hasEnabledListValue` in `src/libs/ReportUtils.ts` assumes `disabledOptions` is always an array:\n\n```ts\nfunction hasEnabledListValue(reportField: PolicyReportField): boolean {\n    return reportField.values.some((_, index) => !reportField.disabledOptions.at(index));\n}\n```\n\nIt's called from `shouldHideSingleReportField`, which `MoneyRequestViewReportFields.tsx` runs while rendering. The `PolicyReportField` type declares `disabledOptions: boolean[]` as required, but the data doesn't always include it. The comment right above the function already notes that fields created outside NewDot can come with an empty `disabledOptions` array. The crash shows they can also come with none at all.\n\nAlso, when merging report fields, `getAvailableReportFields` copies `disabledOptions: policyReportField.disabledOptions` onto the report's field. So an undefined value on the policy field overwrites whatever the report field had.\n\nThe same unguarded `.disabledOptions.at(index)` appears in two more places that would crash next, once the user opens that field:\n- `src/components/MoneyRequestReportView/ReportFieldInlineInput.tsx` (`enabledOptions` filter)\n- `src/pages/DynamicEditReportFieldPage.tsx` (`fieldOptions` filter)\n\n### What changes do you think we should make in order to solve the problem?\n- In `hasEnabledListValue`, use `reportField.disabledOptions?.at(index)`, so a missing array means every value is enabled. That matches the behavior the existing comment describes for empty arrays.\n- Apply the same `?.` guard in `ReportFieldInlineInput.tsx` and `DynamicEditReportFieldPage.tsx`.\n- Change `disabledOptions` to optional (`disabledOptions?: boolean[]`) on `PolicyReportField` in `src/types/onyx/Policy.ts`, and on the report field type in `ReportNameValuePairs.ts`. TypeScript will then flag any other unguarded access. The write paths in `actions/Policy/ReportField.ts` that call `.push`/`.splice` should default to `[]` first.\n\n### What specific scenarios should we cover in automated tests?\nUnit tests for `shouldHideSingleReportField` / `hasEnabledListValue` with a list field where `disabledOptions` is:\n- undefined → not hidden, no throw\n- `[]` → not hidden\n- partially filled (e.g. `[true]` with 2 values) → not hidden\n- all `true` → hidden\n\nPlus a render test that `MoneyRequestViewReportFields` doesn't throw for a list field without `disabledOptions`.\n\n### What alternative solutions did you explore?\nNormalize the field once, in the report-field merge in `getAvailableReportFields` (`disabledOptions: policyReportField.disabledOptions ?? field.disabledOptions ?? []`). That covers the report view, but not fields read directly from the policy or from reportNameValuePairs, so I'd still add the guards above.\n"
+    },
+    {
+      "auteur": "aimane-chnaif",
+      "date": "2026-11-17T22:45:02Z",
+      "texte": "@MelvinBot implement [this](https://github.com/Expensify/App/issues/107169#issuecomment-6961572298)"
+    },
+    {
+      "auteur": "MelvinBot",
+      "date": "2026-11-17T23:14:17Z",
+      "texte": "🤖 Web test steps verification results: ❌ fail\n\nWeb verification blocked by unavailable test data, not an observed App regression. The account has no reports, and supported tools cannot inject the required omitted-disabledOptions fixture.\n\n<img src=\"https://melvinbot-assets.exops.io/107169-fixture-limit-6ed9b724-f1b2-49ba-b05b-6c18b594259d.png\" alt=\"Reports screen showing No reports yet\" height=\"360\">\n\n| Step | Status |\n|------|--------|\n| <details><summary>Report renders with missing disabled flags</summary>Blocked: account has no reports.<br><img src=\"https://melvinbot-assets.exops.io/107169-fixture-limit-6ed9b724-f1b2-49ba-b05b-6c18b594259d.png\" alt=\"Reports screen showing No reports yet\" height=\"360\"></details> | ❌ |\n| <details><summary>Dropdown opens and accepts selection</summary>Not exercised: required fixture unavailable.</details> | ❌ |\n| <details><summary>Disabled options remain excluded</summary>Not exercised in the browser.</details> | ❌ |\n\nImplemented in [Prevent report field crashes when disabled options are missing](https://github.com/Expensify/App/pull/107185), a draft assigned to `aimane-chnaif`.\n\nBoth targeted suites passed: **1,760 tests**. Lint, typecheck, spelling, and Storybook smoke checks passed. Full-suite timeout and compiler/formatting-command limitations are documented in the PR.\n\n\n---\n_[view run](https://github.com/Expensify/melvin/actions/runs/44193069097)_ · _no recording available_\n"
+    },
+    {
+      "auteur": "expensify-chore-bot[bot]",
+      "date": "2026-11-23T21:54:03Z",
+      "texte": "@aimane-chnaif Huh... This is 4 days overdue. Who can take care of this?"
+    },
+    {
+      "auteur": "expensify-chore-bot[bot]",
+      "date": "2026-11-24T20:30:04Z",
+      "texte": "Triggered auto assignment to Contributor-plus team member for initial proposal review - @getusha (`External`)"
+    },
+    {
+      "auteur": "mountiny",
+      "date": "2026-11-24T20:30:40Z",
+      "texte": "@getusha can you please take over the pr aimane started? "
+    }
+  ],
+  "raison_suivi": "À préparer : External posé, Melvin low",
+  "enregistre_le": "2026-11-25T01:34:21Z"
+}

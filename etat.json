@@ -1,6 +1,7 @@
 {
   "deja_signale": {
     "106630:jouable": "2026-11-24T17:34:13Z",
+    "107169:preparer": "2026-11-25T01:34:21Z",
     "107511:preparer": "2026-11-20T18:41:56Z",
     "107597:preparer": "2026-11-20T18:41:56Z",
     "107620:preparer": "2026-11-21T00:17:35Z",
@@ -26,6 +27,17 @@
     "107862:preparer": "2026-11-24T17:34:13Z"
   },
   "suivis": {
+    "107169": {
+      "assignes": [
+        "aimane-chnaif",
+        "getusha",
+        "mountiny"
+      ],
+      "ferme": false,
+      "help_wanted": false,
+      "propositions": 1,
+      "recommande": false
+    },
     "107511": {
       "assignes": [
         "KJ21-ENG",
@@ -124,6 +136,7 @@
     },
     "107862": {
       "assignes": [
+        "JS00001",
         "ShridharGoel",
         "TaduJR",
         "heyjennahay"
