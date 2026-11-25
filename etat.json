@@ -13,6 +13,7 @@
     "107676:preparer": "2026-11-22T01:10:00Z",
     "107678:preparer": "2026-11-22T07:58:41Z",
     "107683:preparer": "2026-11-22T07:58:41Z",
+    "107711:preparer": "2026-11-25T10:25:14Z",
     "107757:preparer": "2026-11-23T22:13:50Z",
     "107765:preparer": "2026-11-23T22:13:50Z",
     "107766:preparer": "2026-11-23T22:13:50Z",
@@ -103,7 +104,7 @@
       ],
       "ferme": false,
       "help_wanted": false,
-      "propositions": 0,
+      "propositions": 1,
       "recommande": false
     },
     "107795": {
@@ -139,7 +140,8 @@
         "JS00001",
         "ShridharGoel",
         "TaduJR",
-        "heyjennahay"
+        "heyjennahay",
+        "pecanoro"
       ],
       "ferme": false,
       "help_wanted": false,
