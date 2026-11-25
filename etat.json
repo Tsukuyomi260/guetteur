@@ -25,7 +25,12 @@
     "107835:preparer": "2026-11-24T17:34:13Z",
     "107841:preparer": "2026-11-24T17:34:13Z",
     "107853:preparer": "2026-11-24T17:34:13Z",
-    "107862:preparer": "2026-11-24T17:34:13Z"
+    "107862:preparer": "2026-11-24T17:34:13Z",
+    "107960:preparer": "2026-11-25T20:02:06Z",
+    "107961:preparer": "2026-11-25T20:02:06Z",
+    "107963:preparer": "2026-11-25T20:02:06Z",
+    "107966:preparer": "2026-11-25T20:02:06Z",
+    "108004:preparer": "2026-11-25T20:02:06Z"
   },
   "suivis": {
     "107169": {
@@ -88,15 +93,6 @@
       "propositions": 2,
       "recommande": false
     },
-    "107676": {
-      "assignes": [
-        "Ollyws"
-      ],
-      "ferme": false,
-      "help_wanted": false,
-      "propositions": 2,
-      "recommande": false
-    },
     "107765": {
       "assignes": [
         "mountiny",
@@ -107,15 +103,6 @@
       "propositions": 1,
       "recommande": false
     },
-    "107795": {
-      "assignes": [
-        "nyomanjyotisa"
-      ],
-      "ferme": false,
-      "help_wanted": false,
-      "propositions": 3,
-      "recommande": false
-    },
     "107808": {
       "assignes": [
         "samranahm"
@@ -123,16 +110,6 @@
       "ferme": false,
       "help_wanted": false,
       "propositions": 4,
-      "recommande": false
-    },
-    "107835": {
-      "assignes": [
-        "TaduJR",
-        "dylanexpensify"
-      ],
-      "ferme": false,
-      "help_wanted": false,
-      "propositions": 1,
       "recommande": false
     },
     "107862": {
@@ -146,6 +123,15 @@
       "ferme": false,
       "help_wanted": false,
       "propositions": 0,
+      "recommande": false
+    },
+    "107966": {
+      "assignes": [
+        "gijoe0295"
+      ],
+      "ferme": false,
+      "help_wanted": false,
+      "propositions": 2,
       "recommande": false
     }
   }
