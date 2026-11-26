@@ -31,7 +31,8 @@
     "107963:preparer": "2026-11-25T20:02:06Z",
     "107966:preparer": "2026-11-25T20:02:06Z",
     "108004:preparer": "2026-11-25T20:02:06Z",
-    "108042:preparer": "2026-11-26T02:45:30Z"
+    "108042:preparer": "2026-11-26T02:45:30Z",
+    "108054:preparer": "2026-11-26T11:32:19Z"
   },
   "suivis": {
     "107169": {
@@ -132,7 +133,7 @@
       ],
       "ferme": false,
       "help_wanted": false,
-      "propositions": 2,
+      "propositions": 4,
       "recommande": false
     }
   }
