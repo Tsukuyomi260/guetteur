@@ -1,0 +1,37 @@
+{
+  "numero": 108160,
+  "repo": "Expensify/App",
+  "titre": "[$2250] Payment for Digits integration",
+  "lien": "https://github.com/Expensify/App/issues/108160",
+  "montant": 2250,
+  "labels": [
+    "External",
+    "Daily",
+    "Task"
+  ],
+  "assignes": [
+    "lakchote",
+    "mallenexpensify",
+    "truph01",
+    "daledah"
+  ],
+  "plateformes": [
+    "non précisées"
+  ],
+  "corps": "**Tracking issue:** https://github.com/Expensify/Expensify/issues/678938\n**Project board:** https://github.com/orgs/Expensify/projects/352/views/1\n\nProposed Contributor+ payment for @truph01: **$2,250 via NewDot**, using the same $250-per-issue pricing as [Rillet](https://github.com/Expensify/App/issues/99349), [DualEntry](https://github.com/Expensify/App/issues/101869), [Campfire](https://github.com/Expensify/App/issues/104329) and [Zoho Books](https://github.com/Expensify/App/issues/107865).\n\n**Issues for the project + cost:**\n\n- [ ] https://github.com/Expensify/App/issues/104847 - $250\n- [ ] https://github.com/Expensify/App/issues/104848 - $250\n- [ ] https://github.com/Expensify/App/issues/104849 - $250\n- [ ] https://github.com/Expensify/App/issues/104850 - $250\n- [ ] https://github.com/Expensify/App/issues/104851 - $250\n- [ ] https://github.com/Expensify/App/issues/104852 - $250\n- [ ] https://github.com/Expensify/App/issues/106670 - $250\n- [ ] https://github.com/Expensify/App/issues/107380 - $250\n- [ ] https://github.com/Expensify/App/issues/107439 - $250\n\nhttps://github.com/Expensify/App/issues/104851, https://github.com/Expensify/App/issues/104852, https://github.com/Expensify/App/issues/107380 and https://github.com/Expensify/App/issues/107439 are still open until their regression windows end. The $175 C+ amount on https://github.com/Expensify/App/issues/106670 is covered by this issue, so it shouldn't be paid separately.\n\nThe rest of the project will be added here as it ships: https://github.com/Expensify/App/issues/104853, https://github.com/Expensify/App/issues/104854 and https://github.com/Expensify/App/issues/107863.\n\n@daledah built these issues and skipped the per-issue payments too, so we'd pay once for the project. @mallenexpensify can you add their Contributor payment and confirm the amount?\n\nAll included issues have `Skip Payment` so they aren't paid twice, as [requested by Matt](https://github.com/Expensify/App/issues/97241#issuecomment-5672513832).\n\n\n<details><summary>Issue Owner</summary>Current Issue Owner: @daledah</details>\n<details><summary>Upwork Automation - Do Not Edit</summary>\n    <ul>\n        <li>Upwork Job URL: <a href=\"https://www.upwork.com/jobs/~022126216200325845885\">https://www.upwork.com/jobs/~022126216200325845885</a></li>\n        <li>Upwork Job ID: 2126216200325845885</li>\n        <li>Last Price Increase: 2026-11-27</li>\n    </ul>\n</details>",
+  "melvin_confiance": "aucune",
+  "commentaires": [
+    {
+      "auteur": "expensify-chore-bot[bot]",
+      "date": "2026-11-27T07:26:57Z",
+      "texte": "Current assignees @truph01 and @daledah are eligible for the External assigner, not assigning anyone new."
+    },
+    {
+      "auteur": "expensify-chore-bot[bot]",
+      "date": "2026-11-27T07:27:02Z",
+      "texte": "Job added to Upwork: https://www.upwork.com/jobs/~022126216200325845885"
+    }
+  ],
+  "raison_suivi": "À préparer : External posé, Melvin aucune",
+  "enregistre_le": "2026-11-27T12:11:27Z"
+}

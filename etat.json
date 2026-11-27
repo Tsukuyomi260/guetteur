@@ -36,7 +36,9 @@
     "108054:preparer": "2026-11-26T11:32:19Z",
     "108093:preparer": "2026-11-26T20:29:35Z",
     "108117:preparer": "2026-11-26T20:29:35Z",
-    "108123:preparer": "2026-11-26T20:29:35Z"
+    "108123:preparer": "2026-11-26T20:29:35Z",
+    "108160:preparer": "2026-11-27T12:11:27Z",
+    "108177:preparer": "2026-11-27T12:11:27Z"
   },
   "suivis": {
     "107169": {
@@ -77,7 +79,7 @@
       ],
       "ferme": false,
       "help_wanted": false,
-      "propositions": 2,
+      "propositions": 1,
       "recommande": false
     },
     "107644": {
@@ -138,6 +140,18 @@
       "ferme": false,
       "help_wanted": false,
       "propositions": 4,
+      "recommande": false
+    },
+    "108160": {
+      "assignes": [
+        "daledah",
+        "lakchote",
+        "mallenexpensify",
+        "truph01"
+      ],
+      "ferme": false,
+      "help_wanted": false,
+      "propositions": 0,
       "recommande": false
     }
   }
