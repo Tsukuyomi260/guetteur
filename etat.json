@@ -22,6 +22,7 @@
     "107791:preparer": "2026-11-24T06:06:01Z",
     "107795:preparer": "2026-11-24T06:06:01Z",
     "107806:preparer": "2026-11-24T06:06:01Z",
+    "107808:jouable": "2026-11-27T21:17:19Z",
     "107808:preparer": "2026-11-24T06:06:01Z",
     "107835:preparer": "2026-11-24T17:34:13Z",
     "107841:preparer": "2026-11-24T17:34:13Z",
@@ -38,7 +39,10 @@
     "108117:preparer": "2026-11-26T20:29:35Z",
     "108123:preparer": "2026-11-26T20:29:35Z",
     "108160:preparer": "2026-11-27T12:11:27Z",
-    "108177:preparer": "2026-11-27T12:11:27Z"
+    "108177:preparer": "2026-11-27T12:11:27Z",
+    "108219:preparer": "2026-11-27T21:17:19Z",
+    "108228:preparer": "2026-11-27T21:17:19Z",
+    "108236:preparer": "2026-11-27T21:17:19Z"
   },
   "suivis": {
     "107169": {
@@ -116,8 +120,8 @@
         "samranahm"
       ],
       "ferme": false,
-      "help_wanted": false,
-      "propositions": 4,
+      "help_wanted": true,
+      "propositions": 15,
       "recommande": false
     },
     "107862": {
@@ -152,6 +156,25 @@
       "ferme": false,
       "help_wanted": false,
       "propositions": 0,
+      "recommande": false
+    },
+    "108219": {
+      "assignes": [
+        "Krishna2323"
+      ],
+      "ferme": false,
+      "help_wanted": false,
+      "propositions": 2,
+      "recommande": false
+    },
+    "108228": {
+      "assignes": [
+        "Julesssss",
+        "linhvovan29546"
+      ],
+      "ferme": false,
+      "help_wanted": false,
+      "propositions": 4,
       "recommande": false
     }
   }
