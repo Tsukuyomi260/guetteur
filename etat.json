@@ -1,6 +1,7 @@
 {
   "deja_signale": {
     "106630:jouable": "2026-11-24T17:34:13Z",
+    "106782:jouable": "2026-11-28T12:01:57Z",
     "107169:preparer": "2026-11-25T01:34:21Z",
     "107511:preparer": "2026-11-20T18:41:56Z",
     "107578:preparer": "2026-11-26T20:29:35Z",
@@ -98,7 +99,8 @@
     },
     "107675": {
       "assignes": [
-        "cretadn22"
+        "cretadn22",
+        "tylerkaraszewski"
       ],
       "ferme": false,
       "help_wanted": false,
@@ -121,7 +123,7 @@
       ],
       "ferme": false,
       "help_wanted": true,
-      "propositions": 19,
+      "propositions": 22,
       "recommande": false
     },
     "107862": {
@@ -160,7 +162,8 @@
     },
     "108219": {
       "assignes": [
-        "Krishna2323"
+        "Krishna2323",
+        "dukenv0307"
       ],
       "ferme": false,
       "help_wanted": false,
