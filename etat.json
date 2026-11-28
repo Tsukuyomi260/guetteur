@@ -43,7 +43,8 @@
     "108177:preparer": "2026-11-27T12:11:27Z",
     "108219:preparer": "2026-11-27T21:17:19Z",
     "108228:preparer": "2026-11-27T21:17:19Z",
-    "108236:preparer": "2026-11-27T21:17:19Z"
+    "108236:preparer": "2026-11-27T21:17:19Z",
+    "108264:preparer": "2026-11-28T19:54:31Z"
   },
   "suivis": {
     "107169": {
@@ -123,7 +124,7 @@
       ],
       "ferme": false,
       "help_wanted": true,
-      "propositions": 22,
+      "propositions": 23,
       "recommande": false
     },
     "107862": {
